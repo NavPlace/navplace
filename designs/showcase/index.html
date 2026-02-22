@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en" data-theme="system">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Showcase Theme | NavPlace</title>
+    <link href="theme.css" rel="stylesheet" />
+</head>
+<body>
+<div class="page">
+
+    <div class="topbar">
+        <div class="identity">
+            <h1>John Doe</h1>
+            <a href="mailto:hello@example.com">hello@example.com</a>
+        </div>
+        <div class="theme-switch" role="group" aria-label="Theme">
+            <button data-theme="system">Auto</button>
+            <button data-theme="light">Light</button>
+            <button data-theme="dark">Dark</button>
+        </div>
+    </div>
+
+    <div class="search">
+        <input id="search" type="search" placeholder="Search" autocomplete="off" />
+    </div>
+
+    <h2 class="section-title">Showcase</h2>
+    <div id="grid" class="grid"></div>
+</div>
+
+<script src="../../lib/navplace.js"></script>
+<script>
+(function () {
+
+    navplace({
+        input: '#search',
+        meta: {
+            title: '.identity h1',
+            email: '.identity a',
+            subtitle: '.section-title',
+        },
+        update: items => render(items),
+    });
+
+    const root = document.documentElement;
+    const buttons = document.querySelectorAll('.theme-switch button');
+
+    const saved = localStorage.getItem('theme') || 'system';
+    apply_theme(saved);
+
+    buttons.forEach(v => v.addEventListener('click', () => apply_theme(v.dataset.theme)));
+
+    function render(items)
+    {
+        const grid = document.getElementById('grid');
+        grid.replaceChildren(...items.map(function (item) {
+            const templ = document.createElement('template');
+            templ.innerHTML = `
+                <a href="${item.href}" class="tile">
+                    <div class="icon">
+                        <img src="${item.icon_url}">
+                    </div>
+                    <div>
+                        <div class="label">${item.label}</div>
+                        <div class="sub">${new URL(item.href).host}</div>
+                    </div>
+                </a>
+            `;
+            const out = templ.content.firstElementChild;
+            out.onclick = e => navplace.navigate(item, e);
+            return out;
+        }));
+    }
+
+    function apply_theme(t) {
+        root.dataset.theme = t !== 'system' ? t : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        buttons.forEach(v => v.classList.toggle('active', v.dataset.theme === t));
+        localStorage.setItem('theme', t);
+    }
+
+})();
+</script>
+</body>
+</html>

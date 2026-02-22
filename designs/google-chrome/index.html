@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Google Chrome Theme | NavPlace</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../../unpkg/@vbarbarosh/smcss@1.2.0/dist/sm.css" rel="stylesheet">
+    <link href="theme.css" rel="stylesheet">
+</head>
+<body>
+
+<div id="app"></div>
+
+<script src="../../unpkg/bluebird@3.7.2/js/browser/bluebird.js"></script>
+<script src="../../unpkg/vue@3.5.25/dist/vue.global.js"></script>
+<script src="../../lib/navplace.js"></script>
+<script>
+const app = Vue.createApp({
+    template: `
+        <div class="page">
+
+            <!-- SEARCH -->
+            <div class="search-wrap">
+                <div class="search">
+                    <!-- magnifier -->
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15.5 14h-.8l-.3-.3a6.5 6.5 0 1 0-.7.7l.3.3v.8l5 5 1.5-1.5-5-5zM10 15a5 5 0 1 1 0-10 5 5 0 0 1 0 10z" />
+                    </svg>
+                    <input ref="search" />
+                </div>
+            </div>
+
+            <!-- SHORTCUTS -->
+            <div class="shortcuts">
+
+                <a v-for="item in items" v-bind:href="item.href" class="tile">
+                    <span class="tile-inner">
+                        <img v-if="item.icon" v-bind:src="item.icon" alt="">
+                    </span>
+                    <span class="tile-label">{{ item.label }}</span>
+                </a>
+
+<!--
+
+                <div class="tile">
+                    <div class="tile-inner">
+                        <div class="icon pink"></div>
+                    </div>
+                    <div class="tile-label">kb</div>
+                </div>
+
+                <div class="tile">
+                    <div class="tile-inner">
+                        <div class="icon pink"></div>
+                    </div>
+                    <div class="tile-label">Editor | Goals</div>
+                </div>
+
+                <div class="tile">
+                    <div class="tile-inner">
+                        <div class="icon pink"></div>
+                    </div>
+                    <div class="tile-label">Backend | Go...</div>
+                </div>
+
+                <div class="tile">
+                    <div class="tile-inner">
+                        <div class="icon pink"></div>
+                    </div>
+                    <div class="tile-label">tasks</div>
+                </div>
+
+                <div class="tile">
+                    <div class="tile-inner">
+                        <div class="icon green">G</div>
+                    </div>
+                    <div class="tile-label">repos</div>
+                </div>
+
+                <div class="tile">
+                    <div class="tile-inner">
+                        <div class="icon gray"></div>
+                    </div>
+                    <div class="tile-label">status</div>
+                </div>
+
+                <div class="tile">
+                    <div class="tile-inner">
+                        <div class="icon orange"></div>
+                    </div>
+                    <div class="tile-label">grafana</div>
+                </div>
+
+                <div class="tile">
+                    <div class="tile-inner">
+                        <div class="icon orange">I</div>
+                    </div>
+                    <div class="tile-label">infisical</div>
+                </div>
+
+                <div class="tile add">
+                    <div class="tile-inner">+</div>
+                    <div class="tile-label">Add shortcut</div>
+                </div>
+-->
+
+            </div>
+        </div>
+    `,
+    data: function () {
+        return {
+            items: [],
+        };
+    },
+    mounted: function () {
+        navplace({
+            input: this.$refs.search,
+            update: items => this.items.splice(0, this.items.length, ...items),
+        });
+    },
+});
+app.mixin({
+    methods: {
+        px,
+        pc,
+    },
+});
+app.mount('#app');
+function px(v) {
+    return v ? `${v}px` : '0';
+}
+function pc(v) {
+    return v ? `${v*100}%` : '0';
+}
+</script>
+
+</body>
+</html>

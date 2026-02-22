@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NavPlace Kids Theme</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', Arial, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #search {
+            width: 80%;
+            max-width: 600px;
+            padding: 15px;
+            font-size: 24px;
+            border: 2px solid #87ceeb;
+            border-radius: 30px;
+            margin-bottom: 30px;
+            outline: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        #search::placeholder {
+            color: #a9a9a9;
+        }
+        #results {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 30px;
+            width: 90%;
+            max-width: 1200px;
+        }
+        .card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background-color: #fffacd;
+            border-radius: 30px;
+            text-decoration: none;
+            color: #333;
+            font-size: 24px;
+            text-align: center;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s ease;
+        }
+        .card:hover {
+            transform: scale(1.05);
+        }
+        .card img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            object-fit: cover;
+            border: 3px solid #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card:nth-child(3n+1) {
+            background-color: #b0e57c;
+        }
+        .card:nth-child(3n+2) {
+            background-color: #ffd700;
+        }
+        .card:nth-child(3n+3) {
+            background-color: #87cefa;
+        }
+    </style>
+</head>
+<body>
+<input type="search" id="search" placeholder="What are you looking for?">
+<div id="results"></div>
+<script src="../../lib/navplace.js"></script>
+<script>
+    const input = document.getElementById('search');
+    const container = document.getElementById('results');
+    const update = (items) => {
+        container.innerHTML = '';
+        items.forEach(item => {
+            const card = document.createElement('a');
+            card.href = item.href;
+            card.className = 'card';
+            const img = document.createElement('img');
+            img.src = item.image_url || item.icon_url;
+            img.alt = item.label;
+            card.appendChild(img);
+            const label = document.createElement('span');
+            label.textContent = item.label;
+            card.appendChild(label);
+            container.appendChild(card);
+        });
+    };
+    navplace({ input, update });
+</script>
+</body>
+</html>

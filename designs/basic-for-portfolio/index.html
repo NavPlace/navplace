@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NavPlace Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            color: #2c3e50;
+            background: #f8f9fa;
+            line-height: 1.6;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .navplace-container {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .search-section {
+            margin-bottom: 1rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            font-size: 1.125rem;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            background: white;
+            color: #2c3e50;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: #6c757d;
+            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.08);
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .item-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .item-card:hover {
+            transform: translateY(-4px);
+            border-color: #ced4da;
+            box-shadow: 0 8px 24px rgba(108, 117, 125, 0.12);
+        }
+
+        .item-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: #f8f9fa;
+            padding: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .item-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .item-label {
+            font-weight: 600;
+            font-size: 1.125rem;
+            margin-bottom: 0.25rem;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+
+        .item-href {
+            font-size: 0.875rem;
+            color: #6c757d;
+            margin-bottom: 0.75rem;
+            word-break: break-all;
+        }
+
+        .item-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .meta-tag {
+            background: #f8f9fa;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: #495057;
+            border: 1px solid #e9ecef;
+        }
+
+        .item-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #6c757d;
+            font-size: 1.125rem;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .items-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .item-card {
+                padding: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="navplace-container">
+    <div class="search-section">
+        <input type="search"
+               class="search-input"
+               placeholder="Search portfolio items..."
+               aria-label="Search portfolio items">
+    </div>
+
+    <div class="items-grid" id="items-container">
+        <!-- Items will be rendered here by NavPlace -->
+    </div>
+</div>
+
+<script src="../../lib/navplace.js"></script>
+<script>
+    (function() {
+        const container = document.getElementById('items-container');
+        const searchInput = document.querySelector('input[type="search"]');
+
+        function update(items) {
+            if (!items || items.length === 0) {
+                container.innerHTML = `
+                        <div class="empty-state">
+                            No items found. Try a different search.
+                        </div>
+                    `;
+                return;
+            }
+
+            container.innerHTML = items.map(item => `
+                    <a href="${item.href}" class="item-card" target="_blank" rel="noopener">
+                        ${item.icon_url ? `
+                            <img src="${item.icon_url}"
+                                 alt="${item.label} icon"
+                                 class="item-icon"
+                                 onerror="this.style.display='none'">
+                        ` : ''}
+
+                        <div class="item-content">
+                            <div class="item-label">${escapeHtml(item.label)}</div>
+                            <div class="item-href">${escapeHtml(item.href)}</div>
+
+                            ${item.meta && Object.keys(item.meta).length > 0 ? `
+                                <div class="item-meta">
+                                    ${Object.entries(item.meta).map(([key, value]) => `
+                                        <span class="meta-tag">
+                                            ${escapeHtml(key)}: ${escapeHtml(String(value))}
+                                        </span>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        ${item.image_url ? `
+                            <img src="${item.image_url}"
+                                 alt="${item.label} preview"
+                                 class="item-image"
+                                 onerror="this.style.display='none'">
+                        ` : ''}
+                    </a>
+                `).join('');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Initialize NavPlace
+        if (typeof navplace === 'function') {
+            navplace({
+                input: searchInput,
+                update: update
+            });
+        }
+
+        // Initial empty state
+        update([]);
+    })();
+</script>
+</body>
+</html>

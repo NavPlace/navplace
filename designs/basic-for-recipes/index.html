@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NavPlace Recipes</title>
+    <style>
+        :root {
+            --warm-white: #fefaf6;
+            --cream: #f7f1eb;
+            --soft-beige: #ede4d9;
+            --warm-gray: #9c8e7d;
+            --accent-warm: #c67a5d;
+            --dark-warm: #5c4d3d;
+            --shadow-subtle: 0 4px 12px rgba(92, 77, 61, 0.08);
+            --radius-card: 16px;
+            --radius-image: 12px;
+            --transition-gentle: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--warm-white);
+            color: var(--dark-warm);
+            line-height: 1.5;
+            padding: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+
+        .search-container {
+            position: sticky;
+            top: 20px;
+            z-index: 10;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 18px 24px;
+            font-size: 18px;
+            background: var(--cream);
+            border: 2px solid var(--soft-beige);
+            border-radius: 50px;
+            color: var(--dark-warm);
+            outline: none;
+            transition: var(--transition-gentle);
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-warm);
+            background: white;
+        }
+
+        .search-input::placeholder {
+            color: var(--warm-gray);
+        }
+
+        .items-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 32px;
+            padding-bottom: 60px;
+        }
+
+        .recipe-card {
+            background: white;
+            border-radius: var(--radius-card);
+            overflow: hidden;
+            transition: var(--transition-gentle);
+            box-shadow: var(--shadow-subtle);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(92, 77, 61, 0.12);
+        }
+
+        .image-container {
+            position: relative;
+            padding-top: 66.67%; /* 3:2 aspect ratio */
+            overflow: hidden;
+            background: var(--soft-beige);
+        }
+
+        .recipe-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .recipe-card:hover .recipe-image {
+            transform: scale(1.05);
+        }
+
+        .recipe-content {
+            padding: 24px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .recipe-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .favicon {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+
+        .recipe-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--dark-warm);
+            margin-bottom: 4px;
+            line-height: 1.3;
+            text-decoration: none;
+            display: block;
+        }
+
+        .recipe-title:hover {
+            color: var(--accent-warm);
+        }
+
+        .recipe-meta {
+            font-size: 14px;
+            color: var(--warm-gray);
+            margin-bottom: 16px;
+        }
+
+        .recipe-description {
+            color: var(--dark-warm);
+            opacity: 0.85;
+            font-size: 15px;
+            line-height: 1.5;
+            margin-top: auto;
+            padding-top: 16px;
+            border-top: 1px solid var(--cream);
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 80px 40px;
+            color: var(--warm-gray);
+        }
+
+        .empty-state h2 {
+            font-weight: 400;
+            margin-bottom: 12px;
+            font-size: 24px;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 16px;
+            }
+
+            .items-container {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .search-container {
+                margin-bottom: 32px;
+            }
+
+            .search-input {
+                padding: 16px 20px;
+                font-size: 16px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .items-container {
+                grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="search-container">
+    <input type="search"
+           class="search-input"
+           placeholder="Find recipes, ingredients, or techniques..."
+           autocomplete="off">
+</div>
+
+<div class="items-container" id="itemsContainer">
+    <div class="empty-state">
+        <h2>Your recipe collection</h2>
+        <p>Start typing to find your saved recipes and cooking resources</p>
+    </div>
+</div>
+
+<script src="../../lib/navplace.js"></script>
+<script>
+    (function() {
+        const searchInput = document.querySelector('.search-input');
+        const itemsContainer = document.getElementById('itemsContainer');
+
+        function updateItems(items) {
+            if (!items || items.length === 0) {
+                itemsContainer.innerHTML = `
+                        <div class="empty-state">
+                            <h2>No recipes found</h2>
+                            <p>Try different keywords or browse your collection</p>
+                        </div>
+                    `;
+                return;
+            }
+
+            itemsContainer.innerHTML = items.map(item => `
+                    <a href="${item.href}" class="recipe-card" target="_blank">
+                        <div class="image-container">
+                            ${item.image_url ?
+                `<img src="${item.image_url}" alt="${item.label}" class="recipe-image">` :
+                `<div class="recipe-image" style="background: linear-gradient(135deg, var(--soft-beige), var(--cream));"></div>`
+            }
+                        </div>
+                        <div class="recipe-content">
+                            <div class="recipe-header">
+                                ${item.icon_url ? `<img src="${item.icon_url}" alt="" class="favicon">` : ''}
+                                <div>
+                                    <h3 class="recipe-title">${item.label}</h3>
+                                    ${item.meta?.domain ? `<div class="recipe-meta">${item.meta.domain}</div>` : ''}
+                                </div>
+                            </div>
+                            ${item.meta?.description ? `<div class="recipe-description">${item.meta.description}</div>` : ''}
+                            ${item.meta?.category ? `<div class="recipe-meta">${item.meta.category}</div>` : ''}
+                        </div>
+                    </a>
+                `).join('');
+        }
+
+        // Initialize with empty state
+        updateItems([]);
+
+        // Bind NavPlace
+        if (typeof navplace === 'function') {
+            navplace({
+                input: searchInput,
+                update: updateItems
+            });
+        }
+
+        // Fallback for development/demo
+        window.navplaceDemo = function(items) {
+            updateItems(items);
+        };
+    })();
+</script>
+</body>
+</html>

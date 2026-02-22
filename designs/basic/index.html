@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Basic Theme | NavPlace</title>
+    <link href="../../unpkg/@vbarbarosh/smcss@1.2.0/dist/reset.css" rel="stylesheet">
+    <link href="../../unpkg/@vbarbarosh/smcss@1.2.0/dist/sm.css" rel="stylesheet">
+    <link href="theme.css" rel="stylesheet">
+</head>
+<body>
+
+<div id="app"></div>
+
+<script src="../../unpkg/bluebird@3.7.2/js/browser/bluebird.js"></script>
+<script src="../../unpkg/vue@3.5.25/dist/vue.global.js"></script>
+<script src="../../lib/navplace.js"></script>
+<script>
+const app = Vue.createApp({
+    template: `
+<div class="fix-f vsplit bg-page">
+<div class="p10">
+    <input ref="search" class="db ma ph10 pv5 h20 w400" />
+</div>
+<div class="fluid flex-row-center p10 oa">
+    <div class="ma flex-fluid container gap25">
+        <a v-for="item in items"
+           v-bind:href="item.href"
+           v-bind:class="{break: item.break}"
+           target="_blank"
+           class="rel flex-col w200 bs10 bg-bookmark"
+           style="height:112px;">
+            <img v-if="(item.meta.padding === '1')" v-bind:src="(item.image_url ?? item.icon_url)" class="flex-fluid fit-contain" style="padding: 10px 0 35px;" />
+            <img v-else-if="(item.meta.padding === '2')" v-bind:src="(item.image_url ?? item.icon_url)" class="flex-fluid fit-contain" style="padding: 0 10px 15px;" />
+            <img v-else v-bind:src="item.image_url ?? item.icon_url" class="flex-fluid fit-cover" />
+            <span class="bookmark-label">{{ item.label }}</span>
+        </a>
+    </div>
+</div>
+</div>
+`,
+    data: function () {
+        return {
+            items: [],
+        };
+    },
+    computed: {
+    },
+    mounted: function () {
+        navplace({
+            input: this.$refs.search,
+            update: items => this.items.splice(0, this.items.length, ...items),
+        });
+    },
+});
+app.mixin({
+    methods: {
+        px,
+        pc,
+    },
+});
+app.mount('#app');
+function px(v) {
+    return v ? `${v}px` : '0';
+}
+function pc(v) {
+    return v ? `${v*100}%` : '0';
+}
+</script>
+
+</body>
+</html>
