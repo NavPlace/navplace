@@ -1,0 +1,5 @@
+- create a self-contained HTML page for displaying a set of links
+- create a self-contained HTML page for displaying a set of links in a compact way
+- create a self-contained HTML page for displaying a set of links in a table way
+- create a self-contained HTML page for presenting links to recipes
+- create a self-contained HTML page for presenting links to resources for kids
