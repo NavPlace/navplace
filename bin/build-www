@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# http://www.gnu.org/software/bash/manual/bash.html#The-Set-Builtin
+# http://redsymbol.net/articles/unofficial-bash-strict-mode
+set -o nounset -o errexit -o pipefail
+
+script=`realpath $0`
+scriptdir=`dirname $script`
+scriptname=`basename $script`
+
+BLACK="\e[30m" RED="\e[31m" GREEN="\e[32m" YELLOW="\e[33m" BLUE="\e[34m"
+PURPLE="\e[35m" CYAN="\e[36m" WHITE="\e[37m" RESET="\e[0m"
+
+EXIT_MESSAGE="${RED}bin/build-www failed${RESET}"
+
+# http://redsymbol.net/articles/bash-exit-traps/
+# http://redsymbol.net/articles/unofficial-bash-strict-mode/#essential-cleanup
+trap 'echo -e "$EXIT_MESSAGE"' EXIT
+
+cd $scriptdir/..
+
+rm -rf build/www
+mkdir -p build
+
+cp -r www/ build/
+cp -r lib/ build/www/
+cp -r designs/ build/www/
+rm build/www/lib/*.cli.js
+rm build/www/lib/*.test.js
+rm -rf build/www/designs/_plain*
+
+EXIT_MESSAGE="${GREEN}bin/build-www succeeded${RESET}"
