@@ -98,18 +98,19 @@
             tr.appendChild(tdLabel);
             tr.appendChild(tdHref);
 
-            tr.addEventListener("click", (function (href) {
-                return function () { openHref(href); };
-            })(it.href));
+            tr.addEventListener("click", (function (it2) {
+                return function () { openHref(it2); };
+            })(it));
 
             tbody.appendChild(tr);
         }
     }
 
-    function openHref(href) {
-        if (!href) return;
-        // If you run this in Electron, prefer shell.openExternal(href).
-        window.open(href, "_blank", "noopener,noreferrer");
+    function openHref(item) {
+        navplace.navigate(item);
+        // if (!href) return;
+        // // If you run this in Electron, prefer shell.openExternal(href).
+        // window.open(href, "_blank", "noopener,noreferrer");
     }
 
     function clamp(n, a, b) {
@@ -140,7 +141,7 @@
             }
             if (e.key === "Enter") {
                 e.preventDefault();
-                if (ITEMS[selected]) openHref(ITEMS[selected].href);
+                if (ITEMS[selected]) openHref(ITEMS[selected]);
                 return;
             }
             if (e.key === "Escape") {
