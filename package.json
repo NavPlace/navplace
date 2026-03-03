@@ -7,7 +7,7 @@
   "scripts": {
     "start": "electron .",
     "start2": "electron-forge start",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha 'lib/**/*.test.js'",
     "postinstall": "echo bin/configure-unpkg",
     "package": "electron-forge package",
     "make": "electron-forge make"
@@ -27,6 +27,7 @@
     "@electron-forge/plugin-auto-unpack-natives": "^7.10.2",
     "@electron-forge/plugin-fuses": "^7.10.2",
     "@electron/fuses": "^1.8.0",
-    "electron": "^39.2.7"
+    "electron": "^39.2.7",
+    "mocha": "^11.7.5"
   }
 }
