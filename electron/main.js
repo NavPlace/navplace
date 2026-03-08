@@ -18,11 +18,6 @@ cli(main);
 
 async function main()
 {
-    if (require('electron-squirrel-startup')) {
-        app.quit();
-        return;
-    }
-
     await electron.app.whenReady();
 
     electron.ipcMain.handle('api_ping', function (event, ...args) {

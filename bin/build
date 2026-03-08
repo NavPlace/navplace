@@ -19,7 +19,7 @@ trap 'echo -e "$EXIT_MESSAGE"' EXIT
 
 cd $scriptdir
 
-rm -rf build/lib
-mkdir -p build/lib
+rm -rf dist
+npm run dist
 
 EXIT_MESSAGE="${GREEN}bin/build succeeded${RESET}"
