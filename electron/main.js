@@ -67,7 +67,7 @@ async function main()
             return new Response('Not found', {status: 404});
         }
         const domain = decodeURIComponent(request.url.slice('app://favicon/'.length));
-        const file = fs_path_resolve(__dirname, `../data/favicons/${sanitize_filename(domain)}.png`);
+        const file = fs_path_resolve(electron.app.getPath('userData'), `favicons/${sanitize_filename(domain)}.png`);
         await fs_mkdirp(fs_path_dirname(file));
         const buf = await cache({
             get: () => fs_read(file),
