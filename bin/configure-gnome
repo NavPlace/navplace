@@ -42,7 +42,7 @@ d=$PWD
 dconf load / << EOF
 [org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/navplace]
 binding='<Ctrl><Shift><Alt>N'
-command='$d/bin/run'
+command='$d/electron/launcher.js'
 name='navplace'
 EOF
 

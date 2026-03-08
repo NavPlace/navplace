@@ -10,14 +10,22 @@ const fs_read = require('@vbarbarosh/node-helpers/src/fs_read');
 const fs_read_utf8 = require('@vbarbarosh/node-helpers/src/fs_read_utf8');
 const fs_readdir = require('@vbarbarosh/node-helpers/src/fs_readdir');
 const fs_write = require('@vbarbarosh/node-helpers/src/fs_write');
+const os = require('os');
 const parse = require('../lib/parse');
+const path = require('path');
 const sanitize_filename = require('@vbarbarosh/node-helpers/src/sanitize_filename');
 const urlmod = require('@vbarbarosh/node-helpers/src/urlmod');
+const wait_for_socket_connections = require('./helpers/wait_for_socket_connections');
 
 cli(main);
 
 async function main()
 {
+    if (!electron.app.requestSingleInstanceLock()) {
+        electron.app.quit();
+        process.exit(0);
+    }
+
     await electron.app.whenReady();
 
     electron.ipcMain.handle('api_ping', function (event, ...args) {
@@ -28,7 +36,9 @@ async function main()
     });
 
     const win = new electron.BrowserWindow({
+        show: false,
         autoHideMenuBar: true,
+        alwaysOnTop: true,
         width: 1200,
         height: 1000,
         center: true,
@@ -43,6 +53,48 @@ async function main()
             contextIsolation: true,
             nodeIntegration: false,
             preload: fs_path_resolve(__dirname, 'renderer.js'),
+        },
+    });
+
+    electron.app.on('second-instance', async function () {
+        console.log('second-instance');
+        if (win.isMinimized()) {
+            win.restore();
+        }
+        if (!win.isVisible()) {
+            win.show();
+        }
+        win.focus();
+        await win.webContents.executeJavaScript(`{
+            const input = document.querySelector('input');
+            if (input) {
+                input.focus();
+                input.value = '';
+                input.dispatchEvent(new Event('input', {bubbles: true}));
+                // input.select();
+            }
+        }`);
+    });
+    await using _ = await wait_for_socket_connections({
+        socket: path.join(process.env.XDG_CONFIG_HOME || path.join(os.homedir(), '.config'), 'navplace/navplace.sock'),
+        connection: async function () {
+            console.log('socket connection');
+            if (win.isMinimized()) {
+                win.restore();
+            }
+            if (!win.isVisible()) {
+                win.show();
+            }
+            win.focus();
+            await win.webContents.executeJavaScript(`{
+                const input = document.querySelector('input');
+                if (input) {
+                    input.focus();
+                    input.value = '';
+                    input.dispatchEvent(new Event('input', {bubbles: true}));
+                    // input.select();
+                }
+            }`);
         },
     });
 
@@ -113,13 +165,23 @@ async function main()
     const tmp = parse(await fs_read_utf8(fs_path_resolve(process.env.HOME, '.navplace/README.md')));
     const design = make_enum(tmp.meta.design, ['github', ...await fs_readdir(fs_path_resolve(__dirname, '../designs'))]);
     await win.loadFile(fs_path_resolve(__dirname, `../designs/${design}/index.html`));
+    win.show();
+
+    // await once(win, {
+    //     closed: function () {
+    //         console.log('__closed');
+    //     },
+    //     blur: function () {
+    //         console.log('__blur');
+    //         win.close();
+    //     },
+    win.on('blur', function () {
+        win.hide();
+    });
+
     await once(win, {
         closed: function () {
             console.log('__closed');
-        },
-        blur: function () {
-            console.log('__blur');
-            win.close();
         },
     });
 }
