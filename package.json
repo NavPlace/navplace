@@ -9,26 +9,42 @@
     "start": "electron .",
     "test": "mocha 'lib/**/*.test.js'",
     "postinstall": "echo bin/configure-unpkg",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "migrate": "knex migrate:latest",
+    "migrate:make": "knex migrate:make",
+    "migrate:rollback": "knex migrate:rollback",
+    "watch": "nodemon src/http/index.js"
   },
   "build": {
     "appId": "com.navplace",
     "productName": "NavPlace",
     "afterPack": "./electron-build-scripts/afterPack.js",
     "linux": {
-      "target": ["AppImage"],
+      "target": [
+        "AppImage"
+      ],
       "category": "Utility"
     }
   },
   "dependencies": {
-    "@vbarbarosh/node-helpers": "3.74.0",
+    "@paralleldrive/cuid2": "^3.3.0",
+    "@sentry/node": "^10.53.1",
+    "@vbarbarosh/express-helpers": "^2.2.1",
+    "@vbarbarosh/node-helpers": "^3.75.0",
     "@vbarbarosh/type-helpers": "0.2.0",
+    "better-sqlite3": "^12.10.0",
     "bluebird": "^3.7.2",
+    "express": "^4.22.2",
+    "knex": "^3.2.10",
+    "mysql2": "^3.22.3",
+    "pg": "^8.21.0",
     "sanitize-filename": "^1.6.3"
   },
   "devDependencies": {
+    "dotenv": "^17.4.2",
     "electron": "^39.2.7",
     "electron-builder": "^26.8.1",
-    "mocha": "^11.7.5"
+    "mocha": "^11.7.5",
+    "nodemon": "^3.1.14"
   }
 }
