@@ -1,14 +1,12 @@
 #!/usr/bin/env node
 
 const child_process = require('child_process');
+const config = require('./config');
 const net = require('net');
-const os = require('os');
-const path = require('path');
 
 let connected = false;
 
-const socket = path.join(process.env.XDG_CONFIG_HOME || path.join(os.homedir(), '.config'), 'navplace/navplace.sock');
-const client = net.createConnection(socket);
+const client = net.createConnection(config.socket_file);
 client.on('connect', function () {
     connected = true;
     client.end();

@@ -23,8 +23,12 @@ async function main()
     };
 
     ws.onclose = function (event) {
-        console.log('[onclose]', event);
+        console.log('[onclose]', event.code, JSON.stringify(event.reason));
         _resolve();
+    };
+
+    ws.onerror = function (event) {
+        console.log('[onerror]', event.message || event);
     };
 
     ws.onmessage = function (event) {

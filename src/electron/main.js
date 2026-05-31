@@ -1,5 +1,7 @@
 const Promise = require('bluebird');
+const WebSocket = require('ws');
 const cli = require('@vbarbarosh/node-helpers/src/cli');
+const config = require('./config');
 const electron = require('electron');
 const format_date = require('@vbarbarosh/node-helpers/src/format_date');
 const fs = require('fs');
@@ -10,9 +12,10 @@ const fs_read = require('@vbarbarosh/node-helpers/src/fs_read');
 const fs_read_utf8 = require('@vbarbarosh/node-helpers/src/fs_read_utf8');
 const fs_readdir = require('@vbarbarosh/node-helpers/src/fs_readdir');
 const fs_write = require('@vbarbarosh/node-helpers/src/fs_write');
-const os = require('os');
+const http_get_buffer = require('@vbarbarosh/node-helpers/src/http_get_buffer');
+const http_get_json = require('@vbarbarosh/node-helpers/src/http_get_json');
+const make = require('@vbarbarosh/type-helpers');
 const parse = require('../../lib/parse');
-const path = require('path');
 const sanitize_filename = require('@vbarbarosh/node-helpers/src/sanitize_filename');
 const urlmod = require('@vbarbarosh/node-helpers/src/urlmod');
 const wait_for_socket_connections = require('./helpers/wait_for_socket_connections');
@@ -28,11 +31,13 @@ async function main()
 
     await electron.app.whenReady();
 
-    electron.ipcMain.handle('api_ping', function (event, ...args) {
+    let parsed_collection = await load_collection();
+
+    electron.ipcMain.handle('api_ping', function () {
         return `pong ${format_date(new Date())}`;
     });
     electron.ipcMain.handle('api_items_all', async function () {
-        return parse(await fs_read_utf8(fs_path_resolve(process.env.HOME, '.navplace/README.md')));
+        return parsed_collection;
     });
 
     const win = new electron.BrowserWindow({
@@ -76,7 +81,7 @@ async function main()
         }`);
     });
     await using _ = await wait_for_socket_connections({
-        socket: path.join(process.env.XDG_CONFIG_HOME || path.join(os.homedir(), '.config'), 'navplace/navplace.sock'),
+        socket: config.socket_file,
         connection: async function () {
             console.log('socket connection');
             if (win.isMinimized()) {
@@ -97,10 +102,14 @@ async function main()
             }`);
         },
     });
+    await using __ = connect_events(async function () {
+        parsed_collection = await load_collection();
+        win.webContents.send('api_items_changed', parsed_collection);
+    });
 
     electron.protocol.handle('private', async function (request) {
         // XXX fs.promises.realpath will throw if file does not exist
-        const root = await fs.promises.realpath(fs_path_resolve(process.env.HOME, '.navplace')) + '/';
+        const root = await fs.promises.realpath(config.config_dir) + '/';
         const rel = decodeURIComponent(request.url.slice('private://'.length));
         const abs = await fs.promises.realpath(fs_path_resolve(root, rel));
         if (!abs.startsWith(root)) {
@@ -124,7 +133,7 @@ async function main()
         const buf = await cache({
             get: () => fs_read(file),
             set: v => fs_write(file, v),
-            refresh: () => fetch(urlmod('https://www.google.com/s2/favicons?domain=&sz=64', {domain})).then(async v => Buffer.from(await v.arrayBuffer())),
+            refresh: () => http_get_buffer(urlmod('https://www.google.com/s2/favicons?domain=&sz=64', {domain})).then(v => Buffer.from(v)),
         });
         return new Response(buf, {
             headers: {
@@ -162,8 +171,7 @@ async function main()
 
     // await win.loadFile(fs_path_resolve(__dirname, '../../designs/basic/index.html'));
     // await win.loadFile(fs_path_resolve(__dirname, '../../designs/google-chrome/index.html'));
-    const tmp = parse(await fs_read_utf8(fs_path_resolve(process.env.HOME, '.navplace/README.md')));
-    const design = make_enum(tmp.meta.design, ['github', ...await fs_readdir(fs_path_resolve(__dirname, '../../designs'))]);
+    const design = make(parsed_collection.meta.design, {type: 'enum', options: ['github', ...await fs_readdir(config.designs_dir)]});
     await win.loadFile(fs_path_resolve(__dirname, `../../designs/${design}/index.html`));
     win.show();
 
@@ -184,6 +192,114 @@ async function main()
             console.log('__closed');
         },
     });
+}
+
+async function load_collection()
+{
+    if (config.collection_url) {
+        return parse(await fetch_collection_contents());
+    }
+    return parse(await fs_read_utf8(config.readme_file));
+}
+
+async function fetch_collection_contents()
+{
+    const json = await http_get_json(config.collection_url, {headers: {Authorization: `Bearer ${config.personal_access_token}`}});
+    if (typeof json.contents === 'string') {
+        return json.contents;
+    }
+    throw new Error('Collection response JSON must contain string field "contents"');
+}
+
+function connect_events(refresh_collection)
+{
+    if (!config.collection_url || !config.events_url) {
+        return {
+            async [Symbol.asyncDispose]() {
+            },
+        };
+    }
+
+    let closed = false;
+    let ws = null;
+    let reconnect_timer = null;
+    let refresh_timer = null;
+
+    connect();
+
+    return {
+        async [Symbol.asyncDispose]() {
+            closed = true;
+            clearTimeout(reconnect_timer);
+            clearTimeout(refresh_timer);
+            ws?.close();
+        },
+    };
+
+    function connect()
+    {
+        if (closed) {
+            return;
+        }
+        console.log('[ws_connect]', config.events_url);
+        ws = new WebSocket(config.events_url, {headers: {Authorization: `Bearer ${config.personal_access_token}`}});
+        ws.on('open', function () {
+            console.log('[ws_open]', config.events_url);
+        });
+        ws.on('message', function (data) {
+            const text = data.toString();
+            console.log('[ws_message]', text);
+            let event;
+            try {
+                event = JSON.parse(text);
+                if (typeof event === 'string') {
+                    event = JSON.parse(event);
+                }
+            }
+            catch {
+                console.error('[ws_message_invalid]', text);
+                return;
+            }
+            if (event.type === 'hello' || String(event.type).startsWith('collection.')) {
+                console.log('[ws_event]', event.type);
+                schedule_refresh();
+            }
+        });
+        ws.on('close', function (code, reason) {
+            console.log('[ws_close]', code, reason.toString());
+            reconnect();
+        });
+        ws.on('error', function (error) {
+            console.error('[ws_error]', error.message);
+            reconnect();
+        });
+    }
+
+    function reconnect()
+    {
+        if (closed || reconnect_timer) {
+            return;
+        }
+        console.log('[ws_reconnect]', '5000ms');
+        reconnect_timer = setTimeout(function () {
+            reconnect_timer = null;
+            connect();
+        }, 5000);
+    }
+
+    function schedule_refresh()
+    {
+        clearTimeout(refresh_timer);
+        refresh_timer = setTimeout(async function () {
+            refresh_timer = null;
+            try {
+                await refresh_collection();
+            }
+            catch (error) {
+                console.error('[collection_refresh_failed]', error.stack || error.message);
+            }
+        }, 250);
+    }
 }
 
 async function once(inst, spec)
@@ -212,12 +328,4 @@ async function cache({get, set, refresh})
     const value = await refresh();
     await set(value);
     return value;
-}
-
-function make_enum(value, options, default_value = options[0])
-{
-    if (options.includes(value)) {
-        return value;
-    }
-    return default_value;
 }
