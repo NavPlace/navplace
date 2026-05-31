@@ -11,7 +11,7 @@ const fs_read_utf8 = require('@vbarbarosh/node-helpers/src/fs_read_utf8');
 const fs_readdir = require('@vbarbarosh/node-helpers/src/fs_readdir');
 const fs_write = require('@vbarbarosh/node-helpers/src/fs_write');
 const os = require('os');
-const parse = require('../lib/parse');
+const parse = require('../../lib/parse');
 const path = require('path');
 const sanitize_filename = require('@vbarbarosh/node-helpers/src/sanitize_filename');
 const urlmod = require('@vbarbarosh/node-helpers/src/urlmod');
@@ -160,11 +160,11 @@ async function main()
     //     win.webContents.executeJavaScript('console.log("js from main", new Date())');
     // }, 2000);
 
-    // await win.loadFile(fs_path_resolve(__dirname, '../designs/basic/index.html'));
-    // await win.loadFile(fs_path_resolve(__dirname, '../designs/google-chrome/index.html'));
+    // await win.loadFile(fs_path_resolve(__dirname, '../../designs/basic/index.html'));
+    // await win.loadFile(fs_path_resolve(__dirname, '../../designs/google-chrome/index.html'));
     const tmp = parse(await fs_read_utf8(fs_path_resolve(process.env.HOME, '.navplace/README.md')));
-    const design = make_enum(tmp.meta.design, ['github', ...await fs_readdir(fs_path_resolve(__dirname, '../designs'))]);
-    await win.loadFile(fs_path_resolve(__dirname, `../designs/${design}/index.html`));
+    const design = make_enum(tmp.meta.design, ['github', ...await fs_readdir(fs_path_resolve(__dirname, '../../designs'))]);
+    await win.loadFile(fs_path_resolve(__dirname, `../../designs/${design}/index.html`));
     win.show();
 
     // await once(win, {

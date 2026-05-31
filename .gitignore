@@ -3,5 +3,5 @@
 /build
 /data
 /dist
-/electron/static/unpkg
 /node_modules
+/src/electron/static/unpkg

@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "description": "The fastest way to open your links",
   "license": "MIT",
-  "main": "electron/main.js",
+  "main": "src/electron/main.js",
   "scripts": {
     "start": "electron .",
     "test": "mocha 'lib/**/*.test.js'",
