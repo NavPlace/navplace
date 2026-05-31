@@ -13,8 +13,8 @@ exports.up = async function (knex) {
 
         table.integer('user_id').unsigned().notNullable();
 
-        table.string('title', 255).notNullable();
-        table.text('body').notNullable();
+        table.string('label', 255).notNullable();
+        table.text('contents').notNullable();
 
         table.datetime('created_at').notNullable();
         table.datetime('updated_at').notNullable();

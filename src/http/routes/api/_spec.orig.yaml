@@ -1,0 +1,1000 @@
+# https://editor.swagger.io/
+# https://redocly.github.io/redoc
+
+openapi: 3.0.3
+info:
+  title: NavPlace API
+  version: 1.0.0
+  description: |
+    OpenAPI spec for NavPlace API v1.
+    - Authentication: use HTTP Basic Auth.
+      - Username is ignored
+      - Password must be your API token (e.g. `api-xxxxxxxx`)
+  x-logo:
+    url: '/img/np_logo_color_20.svg'
+    altText: NavPlace
+
+security:
+  - BasicAuth: []
+
+servers:
+  - url: https://navplace.com
+
+paths:
+  /api/v1/users/me:
+    get:
+      summary: Get current user info
+      operationId: users_me
+      responses:
+        '200':
+          description: User details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /api/v1/collections:
+    get:
+      summary: List collections
+      operationId: collections_list
+      parameters:
+        - name: uid
+          in: query
+          description: Comma-separated list of collection UIDs to filter
+          required: false
+          schema:
+            type: string
+            example: col_mrybsue3nr4xbadrrhgmxwmi,col_ei2785o4kl4so14ddhu89rob
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Paginated list of collections
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionListResponse'
+
+  /api/v1/collections/{collection_uid}:
+    get:
+      summary: Fetch collection by UID
+      operationId: collections_fetch
+      parameters:
+        - name: collection_uid
+          in: path
+          required: true
+          schema:
+            type: string
+            example: col_mrybsue3nr4xbadrrhgmxwmi
+      responses:
+        '200':
+          description: Collection details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collection'
+
+  /api/v3/feeds:
+    get:
+      summary: List feeds
+      operationId: feeds_list
+      parameters:
+        - name: project
+          in: query
+          description: Comma-separated list of project UIDs
+          required: false
+          schema:
+            type: string
+            example: prj_cjepylfvb2phd50pc4fpehpcy,prj_ck6yy815q0024008kuhmxwmxb
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Feeds list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /api/v3/feeds/{feed_uid}:
+    get:
+      summary: Fetch feed by UID
+      operationId: feeds_fetch
+      parameters:
+        - name: feed_uid
+          in: path
+          required: true
+          schema:
+            type: string
+            example: fed_csoo4coww48c0sw4kos484so0
+      responses:
+        '200':
+          description: Feed details
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/v3/feeds/{feed_uid}/banners:
+    get:
+      summary: List banners for feed
+      operationId: feeds_list_banners
+      parameters:
+        - name: feed_uid
+          in: path
+          required: true
+          schema:
+            type: string
+            example: fed_csoo4coww48c0sw4kos484so0
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Paginated list of banners
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BannerListResponse'
+
+  /api/v3/feeds/{feed_uid}/bannersets:
+    get:
+      summary: List bannersets for feed
+      operationId: feeds_list_bannersets
+      parameters:
+        - name: feed_uid
+          in: path
+          required: true
+          schema:
+            type: string
+            example: fed_csoo4coww48c0sw4kos484so0
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Paginated list of bannersets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BannersetListResponse'
+
+  /api/v3/bannersets:
+    get:
+      summary: List bannersets
+      operationId: bannersets_list
+      parameters:
+        - name: uid
+          in: query
+          description: Comma-separated list of bannerset UIDs
+          required: false
+          schema:
+            type: string
+            example: fdr_cjepyli1e2q1p50pcxipjxyz2,fdr_ckgidydm9000gpx8k4jzjpn1c
+        - name: project
+          in: query
+          description: Comma-separated list of project UIDs
+          required: false
+          schema:
+            type: string
+            example: prj_cjepylfvb2phd50pc4fpehpcy,prj_ck6yy815q0024008kuhmxwmxb
+        - name: banner
+          in: query
+          description: Comma-separated list of banner UIDs
+          required: false
+          schema:
+            type: string
+            example: bnr_cjepuoi8i0a6gj3pcc9b6awxh,bnr_cjepylfma2pgh50pc978j2d89
+        - name: translation
+          in: query
+          description: Comma-separated list of translation UIDs
+          required: false
+          schema:
+            type: string
+            example: trn_cjepyqo3b3jsz50pcwjcwi9uj,trn_ckpmv2egq000geq8ky7vgipit
+        - name: language
+          in: query
+          description: Comma-separated list of language codes
+          required: false
+          schema:
+            type: string
+            example: en,fr,de
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Paginated list of bannersets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BannersetListResponse'
+
+  /api/v3/bannersets/{bannerset_uid}:
+    get:
+      summary: Fetch bannerset by UID
+      operationId: bannersets_fetch
+      parameters:
+        - name: bannerset_uid
+          in: path
+          required: true
+          schema:
+            type: string
+            example: fdr_cjepyli1e2q1p50pcxipjxyz2
+      responses:
+        '200':
+          description: Bannerset details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bannerset'
+
+  /api/v3/banners:
+    get:
+      summary: List banners
+      operationId: banners_list
+      parameters:
+        - name: uid
+          in: query
+          description: Comma-separated list of banner UIDs
+          required: false
+          schema:
+            type: string
+            example: bnr_cjepuoi8i0a6gj3pcc9b6awxh,bnr_cjepylfma2pgh50pc978j2d89
+        - name: project
+          in: query
+          description: Comma-separated list of project UIDs
+          required: false
+          schema:
+            type: string
+            example: prj_cjepylfvb2phd50pc4fpehpcy,prj_ck6yy815q0024008kuhmxwmxb
+        - name: bannerset
+          in: query
+          description: Comma-separated list of bannerset UIDs
+          required: false
+          schema:
+            type: string
+            example: fdr_cjepyli1e2q1p50pcxipjxyz2,fdr_ckgidydm9000gpx8k4jzjpn1c
+        - name: translation
+          in: query
+          description: Comma-separated list of translation UIDs
+          required: false
+          schema:
+            type: string
+            example: trn_cjepyqo3b3jsz50pcwjcwi9uj,trn_ckpmv2egq000geq8ky7vgipit
+        - name: language
+          in: query
+          description: Comma-separated list of language codes
+          required: false
+          schema:
+            type: string
+            example: en,fr,de
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Paginated list of banners
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BannerListResponse'
+
+  /api/v3/banners/{banner_uid}:
+    get:
+      summary: Fetch banner by UID
+      operationId: banners_fetch
+      parameters:
+        - name: banner_uid
+          in: path
+          required: true
+          schema:
+            type: string
+            example: bnr_cjepylfvb2phd50pc4fpehpcy
+      responses:
+        '200':
+          description: Banner details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Banner'
+
+  /api/v3/exports/{job_uid}:
+    get:
+      summary: Fetch export job by UID
+      operationId: exports_fetch
+      parameters:
+        - name: job_uid
+          in: path
+          required: true
+          schema:
+            type: string
+            example: exp_ckqmm6a9j000zxg8kuua19qet
+      responses:
+        '200':
+          description: Export job status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+
+  /api/v3/exports/html5:
+    post:
+      summary: Export banners as HTML5
+      operationId: exports_html5
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - banner_uids
+              properties:
+                banner_uids:
+                  type: array
+                  description: |
+                    List of banner UIDs to export.
+                    ⚠️ All banners must belong to the same bannerset.
+                  items:
+                    type: string
+                    example: bnr_cjepuoi8i0a6gj3pcc9b6awxh
+                ad_network:
+                  type: string
+                  enum: [generic_html5, google_ads, google_ad_manager, google_campaign_manager_360, google_dv_360, google_doubleclick_studio, adform, choozle, sizmek]
+                  default: generic_html5
+                  example: google_ads
+                  description: |
+                    Automatically set click tags for the selected Ad Network.
+
+                # ── Packaging / naming ─────────────────────────────────────────────
+                export_limit_kb:
+                  type: number
+                  format: integer
+                  minimum: 0
+                  default: 0
+                  description: |
+                    Hard cap for the **final ZIP** size (in kilobytes). The exporter may
+                    downscale and/or increase compression to stay under this limit.
+                    Set to `0` (or omit) to disable the cap.
+                  example: 500
+                export_name_prefix_tag:
+                  type: string
+                  default: ""
+                  example: country_code
+                  description: |
+                    Name of the feed column/tag whose **value** is **prepended** to each per-row
+                    ZIP filename when exporting DCO/feeds.
+                    Example: `"country_code"` → `US_campaign_bundle.zip`, `FR_campaign_bundle.zip`.
+                export_name_prefix_static:
+                  type: string
+                  default: ""
+                  example: campaign_bundle
+                  description: Filename prefix of the output banner (without extension).
+
+                # ── Runtime image export behavior ──────────────────────────────────
+                img_2x:
+                  type: boolean
+                  default: false
+                  example: true
+                  description: |
+                    Export **runtime images** at **2× pixel density** (retina). Increases pixel
+                    dimensions and file size accordingly. (⚠️ Has effect only when `export_limit_kb` is not 0.)
+                img_render_at_max_scale:
+                  type: boolean
+                  default: false
+                  example: true
+                  description: |
+                    If an image has a **scale animation**, export its bitmap at the **largest scale**
+                    it reaches in the timeline to preserve sharpness.
+                    Example: scales 300%→100% → exported at 3× the authored pixel size.
+
+                # ── Fallback snapshot (static backup/preview image) ────────────────
+                fallback_img_2x:
+                  type: boolean
+                  default: false
+                  example: false
+                  description: Export the **fallback snapshot** at **2× pixel density** (retina).
+                fallback_img_quality:
+                  type: integer
+                  default: 90
+                  example: 90
+                  minimum: 1
+                  maximum: 100
+                  description: |
+                    Compression quality (1–100) for the **fallback snapshot** (JPG/WEBP).
+                    Higher = better quality, larger file.
+                fallback_img_min_quality:
+                  type: integer
+                  default: 10
+                  example: 50
+                  minimum: 1
+                  maximum: 100
+                  description: |
+                    **Quality floor** (1–100) for the fallback snapshot when `zip_kb_limit`
+                    forces extra compression/downscaling. The exporter will not drop below this value.
+      responses:
+        '200':
+          description: Export job created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status_url:
+                    type: string
+                    example: https://bannernow.com/api/v3/exports/exp_xxxxx
+
+  /api/v3/exports/png:
+    post:
+      summary: Export banners as PNG thumbnails
+      operationId: exports_png
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - banner_uids
+              properties:
+                banner_uids:
+                  type: array
+                  description: |
+                    List of banner UIDs to export.
+                    ⚠️ All banners must belong to the same bannerset.
+                  items:
+                    type: string
+                export_limit_kb:
+                  type: number
+                  format: integer
+                  minimum: 0
+                  default: 0
+                  description: |
+                    Hard cap for the **final ZIP** size (in kilobytes). The exporter may
+                    downscale and/or increase compression to stay under this limit.
+                    Set to `0` (or omit) to disable the cap.
+                  example: 500
+                export_name_prefix_tag:
+                  type: string
+                  default: ""
+                  example: country_code
+                  description: |
+                    Name of the feed column/tag whose **value** is **prepended** to each per-row
+                    ZIP filename when exporting DCO/feeds.
+                    Example: `"country_code"` → `US_campaign_bundle.zip`, `FR_campaign_bundle.zip`.
+                export_name_prefix_static:
+                  type: string
+                  default: ""
+                  example: campaign_bundle
+                  description: Filename prefix of the output banner (without extension).
+                img_2x:
+                  type: boolean
+                  default: false
+                  example: true
+                  description: |
+                    Export **runtime images** at **2× pixel density** (retina). Increases pixel
+                    dimensions and file size accordingly. (⚠️ Has effect only when `export_limit_kb` is not 0.)
+      responses:
+        '200':
+          description: Export job created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status_url:
+                    type: string
+
+  /api/v3/exports/jpg:
+    post:
+      summary: Export banners as JPG thumbnails
+      operationId: exports_jpg
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - banner_uids
+              properties:
+                banner_uids:
+                  type: array
+                  description: |
+                    List of banner UIDs to export.
+                    ⚠️ All banners must belong to the same bannerset.
+                  items:
+                    type: string
+                export_limit_kb:
+                  type: number
+                  format: integer
+                  minimum: 0
+                  default: 0
+                  description: |
+                    Hard cap for the **final ZIP** size (in kilobytes). The exporter may
+                    downscale and/or increase compression to stay under this limit.
+                    Set to `0` (or omit) to disable the cap.
+                  example: 500
+                export_name_prefix_tag:
+                  type: string
+                  default: ""
+                  example: country_code
+                  description: |
+                    Name of the feed column/tag whose **value** is **prepended** to each per-row
+                    ZIP filename when exporting DCO/feeds.
+                    Example: `"country_code"` → `US_campaign_bundle.zip`, `FR_campaign_bundle.zip`.
+                export_name_prefix_static:
+                  type: string
+                  default: ""
+                  example: campaign_bundle
+                  description: Filename prefix of the output banner (without extension).
+                img_2x:
+                  type: boolean
+                  default: false
+                  example: true
+                  description: |
+                    Export **runtime images** at **2× pixel density** (retina). Increases pixel
+                    dimensions and file size accordingly. (⚠️ Has effect only when `export_limit_kb` is not 0.)
+      responses:
+        '200':
+          description: Export job created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status_url:
+                    type: string
+
+  /api/v3/exports/gif:
+    post:
+      summary: Export banners as GIF
+      operationId: exports_gif
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - banner_uids
+              properties:
+                banner_uids:
+                  type: array
+                  description: |
+                    List of banner UIDs to export.
+                    ⚠️ All banners must belong to the same bannerset.
+                  items:
+                    type: string
+                framerate:
+                  type: number
+                  format: integer
+                  minimum: 1
+                  maximum: 60
+                  default: 25
+                  example: 15
+                  description: |
+                    Output GIF frame rate in frames per second (FPS).
+                    Higher FPS → smoother motion but larger file size.
+                    Typical ranges: 12–24 FPS for ads; 10–15 for lighter files.
+                quality:
+                  type: integer
+                  minimum: 1
+                  maximum: 100
+                  default: 100
+                  example: 85
+                  description: |
+                    GIF quantization/dithering quality (1–100). Higher = better color preservation
+                    and fewer banding artifacts, but larger files and slower encoding.
+                    Note: GIF is limited to 256 colors per palette; this setting tunes how colors
+                    are chosen and dithered within that constraint.
+                gif_color_palette:
+                  type: string
+                  enum: [global, per_frame, multi_per_frame]
+                  description: |
+                    Palette strategy for 256-color GIF encoding:
+                    - **global**: One palette for the entire GIF. Smallest files; may cause color
+                      shifts in scenes with varied hues.
+                    - **per_frame**: A separate local palette per frame. Better color accuracy;
+                      larger files due to palette changes.
+                    - **multi_per_frame**: Multiple sub-palettes within a single frame (advanced);
+                      maximizes color fidelity for complex frames at the cost of file size and
+                      compatibility with some older decoders.
+                  default: per_frame
+                  example: per_frame
+                export_name_prefix_tag:
+                  type: string
+                  default: ""
+                  example: country_code
+                  description: |
+                    Name of the feed column/tag whose **value** is **prepended** to each per-row
+                    filename when exporting DCO/feeds.
+                    Example: `"country_code"` → `US_campaign_bundle.zip`, `FR_campaign_bundle.zip`.
+                export_name_prefix_static:
+                  type: string
+                  default: ""
+                  example: campaign_bundle
+                  description: Filename prefix of the output banner (without extension).
+      responses:
+        '200':
+          description: Export job created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status_url:
+                    type: string
+
+  /api/v3/exports/mp4:
+    post:
+      summary: Export banners as MP4 video
+      operationId: exports_mp4
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - banner_uids
+              properties:
+                banner_uids:
+                  type: array
+                  description: |
+                    List of banner UIDs to export.
+                    ⚠️ All banners must belong to the same bannerset.
+                  items:
+                    type: string
+                framerate:
+                  type: number
+                  format: integer
+                  minimum: 1
+                  maximum: 120
+                  default: 25
+                  example: 15
+                  description: |
+                    Output video frame rate in frames per second (FPS).
+                    Higher FPS → smoother motion but larger files.
+                    Typical ranges: 24–30 FPS for standard motion; 50–60 FPS for very smooth playback.
+                quality:
+                  type: integer
+                  minimum: 1
+                  maximum: 100
+                  description: |
+                    Target perceptual quality (1–100). Higher values aim for better visual quality at
+                    the cost of larger file sizes. The encoder maps this value to its internal rate
+                    control (e.g., CRF/bitrate) as appropriate.
+                    Ignored when `lossless` is `true`.
+                  default: 80
+                  example: 80
+                lossless:
+                  type: boolean
+                  description: |
+                    Attempt lossless encoding when supported by the encoder/codec (e.g., intra-only,
+                    quantizer=0, or equivalent). Produces much larger files.
+                    When `true`, the `quality` parameter is ignored.
+                  default: false
+                  example: false
+                export_name_prefix_tag:
+                  type: string
+                  default: ""
+                  example: country_code
+                  description: |
+                    Name of the feed column/tag whose **value** is **prepended** to each per-row
+                    filename when exporting DCO/feeds.
+                    Example: `"country_code"` → `US_campaign_bundle.zip`, `FR_campaign_bundle.zip`.
+                export_name_prefix_static:
+                  type: string
+                  default: ""
+                  example: campaign_bundle
+                  description: Filename prefix of the output banner (without extension).
+      responses:
+        '200':
+          description: Export job created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status_url:
+                    type: string
+
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+
+  schemas:
+    User:
+      type: object
+      properties:
+        uid:
+          type: string
+          example: usr_cjepylfma2pgh50pc978j2d89
+        email:
+          type: string
+          format: email
+          example: user@example.com
+      required:
+        - uid
+        - email
+
+    Project:
+      type: object
+      properties:
+        uid:
+          type: string
+          example: prj_cjepylfvb2phd50pc4fpehpcy
+        title:
+          type: string
+          example: Shared
+        logo_url:
+          type: string
+          format: uri
+          nullable: true
+          example: https://storage.bannernow.com/prj_cjepylfvb2phd50pc4fpehpcy/logo.jpg
+        created_at:
+          type: string
+          format: date-time
+          example: 2017-11-17T15:33:19+00:00
+        updated_at:
+          type: string
+          format: date-time
+          example: 2022-03-19T20:57:01+00:00
+      required:
+        - uid
+        - title
+        - created_at
+        - updated_at
+
+    ProjectListResponse:
+      type: object
+      properties:
+        total:
+          type: integer
+          example: 37
+        limit:
+          type: integer
+          example: 100
+        offset:
+          type: integer
+          example: 0
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Project'
+      required:
+        - total
+        - limit
+        - offset
+        - items
+
+    Banner:
+      type: object
+      properties:
+        uid:
+          type: string
+          example: bnr_cjepuoi8i0a6gj3pcc9b6awxh
+        project_uid:
+          type: string
+          example: prj_cjepylfvb2phd50pc4fpehpcy
+        bannerset_uid:
+          type: string
+          example: fdr_cjepyli1e2q1p50pcxipjxyz2
+        translation_uid:
+          type: string
+          example: trn_cjepyqo3b3jsz50pcwjcwi9uj
+        language_code:
+          type: string
+          example: en
+        width:
+          type: integer
+          example: 300
+        height:
+          type: integer
+          example: 300
+        is_approved:
+          type: boolean
+          example: false
+        created_at:
+          type: string
+          format: date-time
+          example: 2017-11-20T12:58:12+00:00
+        updated_at:
+          type: string
+          format: date-time
+          example: 2025-05-26T08:42:42+00:00
+        saved_at:
+          type: string
+          format: date-time
+          example: 2025-05-26T08:42:42+00:00
+      required:
+        - uid
+        - project_uid
+        - bannerset_uid
+        - translation_uid
+        - language_code
+        - width
+        - height
+        - is_approved
+        - created_at
+        - updated_at
+        - saved_at
+
+    BannerListResponse:
+      type: object
+      properties:
+        total:
+          type: integer
+          example: 120
+        limit:
+          type: integer
+          example: 100
+        offset:
+          type: integer
+          example: 0
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Banner'
+      required:
+        - total
+        - limit
+        - offset
+        - items
+
+    Bannerset:
+      type: object
+      properties:
+        uid:
+          type: string
+          example: fdr_cjepyli1e2q1p50pcxipjxyz2
+        project_uid:
+          type: string
+          example: prj_cjepylfvb2phd50pc4fpehpcy
+        title:
+          type: string
+          example: huge
+        dashboard_url:
+          type: string
+          format: uri
+          example: https://bannernow.com/dashboard2?folder=fdr_cjepyli1e2q1p50pcxipjxyz2
+        created_at:
+          type: string
+          format: date-time
+          example: 2017-10-19T06:59:03+00:00
+        updated_at:
+          type: string
+          format: date-time
+          example: 2022-01-29T13:17:04+00:00
+      required:
+        - uid
+        - project_uid
+        - title
+        - dashboard_url
+        - created_at
+        - updated_at
+
+    BannersetListResponse:
+      type: object
+      properties:
+        total:
+          type: integer
+          example: 208
+        limit:
+          type: integer
+          example: 100
+        offset:
+          type: integer
+          example: 0
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bannerset'
+      required:
+        - total
+        - limit
+        - offset
+        - items
+
+    Job:
+      type: object
+      properties:
+        uid:
+          type: string
+          example: job_ckqmm6a9j000zxg8kuua19qet
+        parent_uid:
+          type: string
+          nullable: true
+          example: null
+        project_uid:
+          type: string
+          example: prj_ckqeul6jf000goc8kvcppeyjt
+        status:
+          type: string
+          enum: [pending, fulfilled, rejected]
+          example: fulfilled
+        subject:
+          type: string
+          example: banner_export_html5
+        user_friendly_error:
+          type: string
+          nullable: true
+          example: Timeout
+        user_friendly_status:
+          type: string
+          example: Done
+        value:
+          type: object
+          nullable: true
+          description: Additional data returned by the job
+          properties:
+            download_url:
+              type: string
+              format: uri
+              example: https://storage.bannernow.com/temp-files/20250926/tmp123/export.zip
+        created_at:
+          type: string
+          format: date-time
+          example: 2021-07-02T17:32:03+00:00
+        updated_at:
+          type: string
+          format: date-time
+          example: 2021-07-02T17:33:27+00:00
+      required:
+        - uid
+        - project_uid
+        - status
+        - subject
+        - user_friendly_status
+        - created_at
+        - updated_at

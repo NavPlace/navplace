@@ -1,12 +1,14 @@
 const als = require('./helpers/als');
+const db = require('../../db');
 const express = require('express');
 const express_fingerprint = require('@vbarbarosh/express-helpers/src/express_fingerprint');
-const format_hrtime0 = require('./helpers/format/format_hrtime0');
-const random_uid = require('./helpers/random/random_uid');
-const {sentry_request_context, setup_sentry_error_handler} = require('./services/sentry');
 const express_routes = require('./helpers/express/express_routes');
-const db = require('../../db');
+const format_hrtime0 = require('./helpers/format/format_hrtime0');
+const fs_path_resolve = require('@vbarbarosh/node-helpers/src/fs_path_resolve');
+const random_uid = require('./helpers/random/random_uid');
 const user_create = require('./models/user_create');
+const {sentry_request_context, setup_sentry_error_handler} = require('./services/sentry');
+const {setup_websockets} = require('./services/events');
 
 const LOGGED_HEADERS = new Set([
     'user-agent',
@@ -49,6 +51,7 @@ async function create_app()
     });
 
     app.use(sentry_request_context);
+    app.use(express.json({limit: '1mb'}));
     app.use(async function (req, res, next) {
         const authwall_user_uid = req.headers['x-auth-user'];
         if (!authwall_user_uid) {
@@ -61,13 +64,18 @@ async function create_app()
         next();
     });
 
+    app.use('/lib', express.static(fs_path_resolve(`${__dirname}/../../lib`)));
+    app.use('/designs', express.static(fs_path_resolve(`${__dirname}/../../designs`)));
+
     express_routes(app, require('./routes/landing'));
     express_routes(app, require('./routes/health'));
     express_routes(app, require('./routes/dashboard'));
-    express_routes(app, require('./routes/collections'));
+    express_routes(app, require('./routes/api/collections'));
 
     setup_sentry_error_handler(app);
     app.use(error_handler);
+
+    app.setup_server = setup_websockets;
 
     return app;
 }
@@ -89,7 +97,7 @@ async function error_handler(error, req, res, next)
         als.logger.write(`[error_handler] ⚠️ ${JSON.stringify(error.stack).slice(1, -1)} url=${req.url} originalUrl=${req.originalUrl}`);
     }
 
-    res.status(400).send(error.message);
+    res.status(error.status_code || error.statusCode || 400).send(error.message);
 }
 
 module.exports = create_app;

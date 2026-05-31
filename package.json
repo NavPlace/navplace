@@ -3,7 +3,7 @@
   "author": "Vladimir Barbarosh <vladimir.barbarosh@gmail.com>",
   "version": "0.0.0",
   "description": "The fastest way to open your links",
-  "license": "ISC",
+  "license": "MIT",
   "main": "electron/main.js",
   "scripts": {
     "start": "electron .",
@@ -38,7 +38,8 @@
     "knex": "^3.2.10",
     "mysql2": "^3.22.3",
     "pg": "^8.21.0",
-    "sanitize-filename": "^1.6.3"
+    "sanitize-filename": "^1.6.3",
+    "ws": "^8.21.0"
   },
   "devDependencies": {
     "dotenv": "^17.4.2",
