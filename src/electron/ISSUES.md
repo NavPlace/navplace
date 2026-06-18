@@ -1,0 +1,1 @@
+- [External links no longer open in most recently focused window](https://issues.chromium.org/issues/491801534)
