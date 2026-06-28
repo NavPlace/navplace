@@ -95,12 +95,12 @@ Every event has the same envelope. `time` is the event timestamp.
 
 Event types:
 
-| `type`                 | `value`                                                       |
-| ---------------------- | ------------------------------------------------------------- |
-| `hello`                | `null` (sent once on connect)                                 |
-| `collection.created`   | `{uid, label, created_at, updated_at}`                        |
-| `collection.updated`   | `{uid, label, created_at, updated_at}`                        |
-| `collection.deleted`   | `{uid, label}`                                                |
+| `type`               | `value`                                |
+|----------------------|----------------------------------------|
+| `hello`              | `null` (sent once on connect)          |
+| `collection.created` | `{uid, label, created_at, updated_at}` |
+| `collection.updated` | `{uid, label, created_at, updated_at}` |
+| `collection.deleted` | `{uid, label}`                         |
 
 Mutations include only the summary fields. Clients that need `contents`
 should re-fetch via `GET /api/v1/collections/{uid}`.
