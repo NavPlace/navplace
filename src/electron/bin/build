@@ -17,9 +17,9 @@ EXIT_MESSAGE="${RED}bin/build failed${RESET}"
 # http://redsymbol.net/articles/unofficial-bash-strict-mode/#essential-cleanup
 trap 'echo -e "$EXIT_MESSAGE"' EXIT
 
-cd $scriptdir
+cd $scriptdir/..
 
-rm -rf dist
-npm run dist
+rm -rf build
+npm run build
 
 EXIT_MESSAGE="${GREEN}bin/build succeeded${RESET}"

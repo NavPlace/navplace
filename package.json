@@ -2,29 +2,14 @@
   "name": "navplace",
   "author": "Vladimir Barbarosh <vladimir.barbarosh@gmail.com>",
   "version": "0.0.0",
-  "description": "The fastest way to open your links",
+  "description": "NavPlace web server and shared link-parsing library",
   "license": "MIT",
-  "main": "src/electron/main.js",
   "scripts": {
-    "start": "electron .",
     "test": "mocha 'lib/**/*.test.js'",
-    "postinstall": "echo bin/configure-unpkg",
-    "dist": "electron-builder",
     "migrate": "knex migrate:latest",
     "migrate:make": "knex migrate:make",
     "migrate:rollback": "knex migrate:rollback",
     "watch": "nodemon src/http/index.js"
-  },
-  "build": {
-    "appId": "com.navplace",
-    "productName": "NavPlace",
-    "afterPack": "./electron-build-scripts/afterPack.js",
-    "linux": {
-      "target": [
-        "AppImage"
-      ],
-      "category": "Utility"
-    }
   },
   "dependencies": {
     "@paralleldrive/cuid2": "^3.3.0",
@@ -39,13 +24,10 @@
     "mysql2": "^3.22.3",
     "pg": "^8.21.0",
     "sanitize-filename": "^1.6.3",
-    "ws": "^8.21.0",
-    "yaml": "^2.9.0"
+    "ws": "^8.21.0"
   },
   "devDependencies": {
     "dotenv": "^17.4.2",
-    "electron": "^42.4.1",
-    "electron-builder": "^26.8.1",
     "mocha": "^11.7.5",
     "nodemon": "^3.1.14"
   }

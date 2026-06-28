@@ -1,0 +1,59 @@
+{
+  "name": "navplace-desktop",
+  "author": "Vladimir Barbarosh <vladimir.barbarosh@gmail.com>",
+  "version": "0.0.0",
+  "description": "The fastest way to open your links",
+  "license": "MIT",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "postinstall": "echo bin/configure-unpkg"
+  },
+  "build": {
+    "appId": "com.navplace",
+    "productName": "NavPlace",
+    "executableName": "navplace",
+    "afterPack": "./bin/afterPack.js",
+    "directories": {
+      "output": "build"
+    },
+    "files": [
+      "**/*",
+      "!static/**"
+    ],
+    "extraFiles": [
+      {
+        "from": "../../lib",
+        "to": "lib"
+      },
+      {
+        "from": "../../designs",
+        "to": "designs"
+      },
+      {
+        "from": "static/unpkg",
+        "to": "unpkg"
+      }
+    ],
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Utility"
+    }
+  },
+  "dependencies": {
+    "@vbarbarosh/node-helpers": "^3.75.0",
+    "@vbarbarosh/type-helpers": "0.2.0",
+    "axios": "^1.7.9",
+    "bluebird": "^3.7.2",
+    "sanitize-filename": "^1.6.3",
+    "ws": "^8.21.0",
+    "yaml": "^2.9.0"
+  },
+  "devDependencies": {
+    "electron": "^42.4.1",
+    "electron-builder": "^26.8.1"
+  }
+}

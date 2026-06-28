@@ -8,7 +8,7 @@ script=`realpath $0`
 scriptdir=`dirname $script`
 scriptname=`basename $script`
 
-cd $scriptdir/..
+cd $scriptdir/../../..
 
 BLACK="\e[30m" RED="\e[31m" GREEN="\e[32m" YELLOW="\e[33m" BLUE="\e[34m"
 PURPLE="\e[35m" CYAN="\e[36m" WHITE="\e[37m" RESET="\e[0m"
@@ -55,7 +55,7 @@ Name=navplace
 GenericName=electron
 Comment=electron
 Icon=$d/ubuntu/Electron_Software_Framework_Logo.svg
-Path=$d
+Path=$d/src/electron
 Exec=npm start
 Categories=Utility;
 StartupWMClass=@vbarbarosh/navplace

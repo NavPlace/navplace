@@ -6,7 +6,7 @@ exports.default = async function (context) {
         return;
     }
 
-    const executable_name = context.packager.appInfo.productFilename.toLowerCase();
+    const executable_name = context.packager.executableName;
     const binary_path = path.join(context.appOutDir, executable_name);
     const binary_path_orig = path.join(context.appOutDir, `${executable_name}.orig`);
 

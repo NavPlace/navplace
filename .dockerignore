@@ -1,6 +1,5 @@
 /.env
 /build
 /data
-/electron
-/electron-build-scripts
 /node_modules
+/src/electron
