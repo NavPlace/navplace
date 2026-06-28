@@ -5,6 +5,10 @@
 NavPlace turns a plain-text list of links into a launcher you can summon, a
 page you can share, and a widget you can embed — all from the same source.
 
+NavPlace is more of a **starting point** than a **final destination**. Each time
+you need to reach some place, you begin with every option on screen and narrow
+them down a few letters at a time, then hit Enter once you reach it.
+
 ## The idea
 
 Pick a design, paste your links, you're done.
