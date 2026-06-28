@@ -2,6 +2,7 @@ const Promise = require('bluebird');
 const WebSocket = require('ws');
 const cli = require('@vbarbarosh/node-helpers/src/cli');
 const config = require('./config');
+const configure_gnome = require('./helpers/configure_gnome');
 const electron = require('electron');
 const format_date = require('@vbarbarosh/node-helpers/src/format_date');
 const fs = require('fs');
@@ -24,6 +25,22 @@ cli(main);
 
 async function main()
 {
+    if (process.argv.includes('--configure-gnome')) {
+        try {
+            const info = await configure_gnome();
+            console.log('✓ Ctrl+Shift+Alt+N successfully registered — NavPlace will summon instantly.');
+            console.log(`  launcher:   ${info.launcher_file}`);
+            console.log(`  cold start: ${info.appimage}`);
+            console.log(`  node:       ${info.node_bin}`);
+            electron.app.exit(0);
+        }
+        catch (error) {
+            console.error(`✗ ${error.message}`);
+            electron.app.exit(1);
+        }
+        return;
+    }
+
     if (!electron.app.requestSingleInstanceLock()) {
         electron.app.quit();
         process.exit(0);
