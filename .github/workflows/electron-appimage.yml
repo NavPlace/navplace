@@ -1,0 +1,65 @@
+name: Electron AppImage
+
+on:
+  push:
+    tags:
+      - 'electron-v*'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build AppImage
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check production ancestry
+        id: production
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          tag_commit=$(git rev-list -n 1 "$GITHUB_REF_NAME")
+          git fetch --no-tags origin production:refs/remotes/origin/production
+
+          if git merge-base --is-ancestor "$tag_commit" origin/production; then
+            echo "build=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "build=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Skipping AppImage build because $GITHUB_REF_NAME is not on origin/production."
+          fi
+
+      - name: Setup Node
+        if: steps.production.outputs.build == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: src/electron/package-lock.json
+
+      - name: Install dependencies
+        if: steps.production.outputs.build == 'true'
+        working-directory: src/electron
+        run: npm ci
+
+      - name: Prepare bundled static directory
+        if: steps.production.outputs.build == 'true'
+        run: mkdir -p src/electron/static/unpkg
+
+      - name: Build AppImage
+        if: steps.production.outputs.build == 'true'
+        run: src/electron/bin/build
+
+      - name: Upload AppImage
+        if: steps.production.outputs.build == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: navplace-appimage-${{ github.ref_name }}
+          path: src/electron/build/*.AppImage
+          if-no-files-found: error
