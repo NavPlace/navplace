@@ -6,7 +6,7 @@ on:
       - 'electron-v*'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -56,10 +56,17 @@ jobs:
         if: steps.production.outputs.build == 'true'
         run: src/electron/bin/build
 
-      - name: Upload AppImage
+      - name: Upload AppImage to release
         if: steps.production.outputs.build == 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: navplace-appimage-${{ github.ref_name }}
-          path: src/electron/build/*.AppImage
-          if-no-files-found: error
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          if ! gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release create "$GITHUB_REF_NAME" \
+              --title "$GITHUB_REF_NAME" \
+              --notes "release $GITHUB_REF_NAME"
+          fi
+
+          gh release upload "$GITHUB_REF_NAME" src/electron/build/*.AppImage --clobber
