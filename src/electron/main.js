@@ -6,6 +6,7 @@ const configure_gnome = require('./helpers/configure_gnome');
 const electron = require('electron');
 const format_date = require('@vbarbarosh/node-helpers/src/format_date');
 const fs = require('fs');
+const fs_exists = require('@vbarbarosh/node-helpers/src/fs_exists');
 const fs_mkdirp = require('@vbarbarosh/node-helpers/src/fs_mkdirp');
 const fs_path_dirname = require('@vbarbarosh/node-helpers/src/fs_path_dirname');
 const fs_path_resolve = require('@vbarbarosh/node-helpers/src/fs_path_resolve');
@@ -20,6 +21,18 @@ const parse = require('../../lib/parse');
 const sanitize_filename = require('@vbarbarosh/node-helpers/src/sanitize_filename');
 const urlmod = require('@vbarbarosh/node-helpers/src/urlmod');
 const wait_for_socket_connections = require('./helpers/wait_for_socket_connections');
+
+const DEFAULT_README = `% design: github
+
+ChatGPT             #ai      https://chatgpt.com/
+GitHub              #dev     https://github.com/
+Gmail               #mail    https://mail.google.com/
+Google Calendar     #work    https://calendar.google.com/
+Google Drive        #work    https://drive.google.com/
+MDN Web Docs        #docs    https://developer.mozilla.org/
+Node.js             #docs    https://nodejs.org/en/docs
+Electron            #docs    https://www.electronjs.org/docs/latest/
+`;
 
 cli(main);
 
@@ -216,7 +229,18 @@ async function load_collection()
     if (config.collection_url) {
         return parse(await fetch_collection_contents());
     }
+    await ensure_default_readme();
     return parse(await fs_read_utf8(config.readme_file));
+}
+
+async function ensure_default_readme()
+{
+    if (await fs_exists(config.readme_file)) {
+        return;
+    }
+
+    await fs_mkdirp(config.config_dir);
+    await fs_write(config.readme_file, DEFAULT_README, {encoding: 'utf8', flag: 'wx'});
 }
 
 async function fetch_collection_contents()
