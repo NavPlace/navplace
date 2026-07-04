@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -o nounset -o errexit -o pipefail
+
+script=`realpath $0`
+scriptdir=`dirname $script`
+scriptname=`basename $script`
+
+cd "$scriptdir/.."
+deno task desktop "$@"

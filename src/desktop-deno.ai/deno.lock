@@ -1,0 +1,23 @@
+{
+  "version": "5",
+  "specifiers": {
+    "jsr:@std/yaml@1.1.2": "1.1.2",
+    "npm:ws@8.21.0": "8.21.0"
+  },
+  "jsr": {
+    "@std/yaml@1.1.2": {
+      "integrity": "de612653c036749ba2044165e316f52412b0f0698afffb7ee80b5331d6d2abae"
+    }
+  },
+  "npm": {
+    "ws@8.21.0": {
+      "integrity": "sha512-Vsp28b7DRcimFQvrqu2Wek3z1iYxDCWqHYB8Qsnk/S4RfaCQzPGPyBNuVjJV3cd6UiKtUtp6sNM77gWvzcCH+g=="
+    }
+  },
+  "workspace": {
+    "dependencies": [
+      "jsr:@std/yaml@1.1.2",
+      "npm:ws@8.21.0"
+    ]
+  }
+}
