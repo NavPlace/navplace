@@ -10,7 +10,7 @@ Two existing designs are the canonical, battle-tested references. When generatin
 
 - **`designs/showcase/`** — the canonical **presentation-style** reference. Powers https://vbarbarosh.com in production. Vanilla JS, no framework. Uses `meta` mapping to bind `% title:` / `% email:` / `% subtitle:` into the page chrome. Has a working light/dark/system theme switcher with `localStorage`. Uses `navplace.navigate(item, e)` on click so multi-open works.
 
-- **`designs/github/`** — the canonical **launcher-style** reference. Default fallback in `electron/main.js` when `% design:` is missing or unknown. Vanilla JS, no framework. Search input + dense table of rows (icon / label / href). Implements its own arrow-key navigation (Up/Down/Enter/Escape) on top of the runtime; opens via `navplace.navigate(item)` to preserve multi-open. Explicit "No matches." empty state.
+- **`designs/github/`** — the canonical **launcher-style** reference. Default fallback in `desktop-electron/main.js` when `% design:` is missing or unknown. Vanilla JS, no framework. Search input + dense table of rows (icon / label / href). Implements its own arrow-key navigation (Up/Down/Enter/Escape) on top of the runtime; opens via `navplace.navigate(item)` to preserve multi-open. Explicit "No matches." empty state.
 
 Both are single-HTML-file plus a single `theme.css`, with no build step and no external dependencies — match that shape for new designs.
 
@@ -557,7 +557,7 @@ a:hover { text-decoration: underline; }
 
 ## Appendix B: Reference design — `github` (launcher style)
 
-The canonical launcher-style design. Default fallback in `electron/main.js`. Vanilla JS, no framework, no build step. Implements arrow-key navigation (Up / Down / Enter / Escape) on top of the runtime; opens via `navplace.navigate(item)` to preserve the multi-open behavior. Has an explicit empty state. Use this as the direct template for launcher-style design briefs.
+The canonical launcher-style design. Default fallback in `desktop-electron/main.js`. Vanilla JS, no framework, no build step. Implements arrow-key navigation (Up / Down / Enter / Escape) on top of the runtime; opens via `navplace.navigate(item)` to preserve the multi-open behavior. Has an explicit empty state. Use this as the direct template for launcher-style design briefs.
 
 ### `designs/github/index.html`
 

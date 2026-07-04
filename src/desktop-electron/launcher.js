@@ -5,7 +5,7 @@ const net = require('net');
 const os = require('os');
 const path = require('path');
 
-// Keep in sync with src/electron/config — this launcher is intentionally
+// Keep in sync with src/desktop-electron/config — this launcher is intentionally
 // dependency-free (Node builtins only) so the hotkey can fire it without
 // loading node_modules or unpacking the AppImage.
 const config_home = process.env.XDG_CONFIG_HOME || path.join(os.homedir(), '.config');

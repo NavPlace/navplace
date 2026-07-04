@@ -11,7 +11,7 @@ Secondary goal:
 ## Desktop settings
 
 The Electron app uses `~/.navplace/settings.yaml` for user settings and secrets.
-Copy the template at `src/electron/config/settings.example.yaml` to that path to
+Copy the template at `src/desktop-electron/config/settings.example.yaml` to that path to
 get started:
 
 ```yaml

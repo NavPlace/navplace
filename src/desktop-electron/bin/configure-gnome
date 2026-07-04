@@ -40,18 +40,18 @@ EOF
 d=$PWD
 
 shopt -s nullglob
-appimages=("$d/src/electron/build/"*.AppImage)
+appimages=("$d/src/desktop-electron/build/"*.AppImage)
 shopt -u nullglob
 appimage="${appimages[0]:-}"
 if test -z "$appimage"; then
-    echo -e "${RED}No AppImage in src/electron/build/ — run 'npm run build' in src/electron first.${RESET}"
+    echo -e "${RED}No AppImage in src/desktop-electron/build/ — run 'npm run build' in src/desktop-electron first.${RESET}"
     exit 1
 fi
 
 dconf load / << EOF
 [org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/navplace]
 binding='<Ctrl><Shift><Alt>N'
-command='$d/src/electron/launcher.js'
+command='$d/src/desktop-electron/launcher.js'
 name='navplace'
 EOF
 
@@ -64,7 +64,7 @@ Name=navplace
 GenericName=electron
 Comment=electron
 Icon=$d/ubuntu/Electron_Software_Framework_Logo.svg
-Path=$d/src/electron/build
+Path=$d/src/desktop-electron/build
 Exec=$appimage
 Categories=Utility;
 StartupWMClass=@vbarbarosh/navplace

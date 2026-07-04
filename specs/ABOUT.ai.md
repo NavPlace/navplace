@@ -12,7 +12,7 @@ NavPlace renders a plain-text list of links via three surfaces, all driven by th
 
 | Surface | Entry point | Source of links |
 |---|---|---|
-| Desktop app (Electron) | `electron/main.js` | `~/.navplace/README.md` |
+| Desktop app (Electron) | `desktop-electron/main.js` | `~/.navplace/README.md` |
 | Web app (Express) | `src/http/index.js` → `create_app.js` | MySQL (via Knex), served through `src/http/routes/api/collections.js` |
 | Embed widget | `<script src=".../lib/embed.js" data-links="…">` | Inline `data-links` attribute on the host page |
 
@@ -84,19 +84,19 @@ Navigation behavior in `lib/navplace.js`:
 
 ## Desktop app
 
-Role: host any NavPlace design full-window. The desktop app has no UI of its own; `electron/main.js` reads `~/.navplace/README.md`, parses it, picks the design from `% design:` (falling back to `github`), and calls `win.loadFile('designs/<name>/index.html')`.
+Role: host any NavPlace design full-window. The desktop app has no UI of its own; `desktop-electron/main.js` reads `~/.navplace/README.md`, parses it, picks the design from `% design:` (falling back to `github`), and calls `win.loadFile('designs/<name>/index.html')`.
 
-Window config (`electron/main.js`):
+Window config (`desktop-electron/main.js`):
 - `width: 1200, height: 1000, center: true`
 - `alwaysOnTop: true, autoHideMenuBar: true`
-- `webPreferences.contextIsolation: true, nodeIntegration: false, preload: electron/renderer.js`
+- `webPreferences.contextIsolation: true, nodeIntegration: false, preload: desktop-electron/renderer.js`
 - `backgroundColor: '#bec2bd', webPreferences.zoomFactor: 1.25`
 
 IPC channels (`electron.ipcMain.handle`):
 - `api_ping` → returns `pong <formatted date>`.
 - `api_items_all` → returns `parse(fs.readFile('~/.navplace/README.md'))`.
 
-Custom protocols registered in `electron/main.js`:
+Custom protocols registered in `desktop-electron/main.js`:
 - `private://<path>` → serves a file under `~/.navplace/`, sandboxed via `fs.realpath` prefix check. Used for `@image-name` references. Content-Type is `image/svg+xml` for `.svg`, otherwise `image/png`. Cache-Control: `max-age=86400`.
 - `app://favicon/<domain>` → returns a Google favicon (`https://www.google.com/s2/favicons?domain=<domain>&sz=64`), cached on disk at `app.getPath('userData')/favicons/<sanitized-domain>.png`.
 
@@ -108,9 +108,9 @@ Recommended designs for the desktop app: list- or table-style designs (search in
 
 Goal: every summon after the first is a socket ping, not a process start.
 
-1. `bin/configure-gnome` (run once on Linux/GNOME) writes a `dconf` custom keybinding mapping **Ctrl+Shift+Alt+N** to `electron/launcher.js`, and installs `~/.local/share/applications/navplace.desktop` (Exec=`npm start`, StartupWMClass=`@vbarbarosh/navplace`).
-2. `electron/launcher.js` is a tiny Node script (no Electron boot). It connects to a Unix socket at `${XDG_CONFIG_HOME:-~/.config}/navplace/navplace.sock` with a 150ms timeout.
-3. If the connection succeeds, the running Electron process (which is listening via `electron/helpers/wait_for_socket_connections.js`) shows the window, focuses it, clears the input, and dispatches a synthetic `input` event.
+1. `bin/configure-gnome` (run once on Linux/GNOME) writes a `dconf` custom keybinding mapping **Ctrl+Shift+Alt+N** to `desktop-electron/launcher.js`, and installs `~/.local/share/applications/navplace.desktop` (Exec=`npm start`, StartupWMClass=`@vbarbarosh/navplace`).
+2. `desktop-electron/launcher.js` is a tiny Node script (no Electron boot). It connects to a Unix socket at `${XDG_CONFIG_HOME:-~/.config}/navplace/navplace.sock` with a 150ms timeout.
+3. If the connection succeeds, the running Electron process (which is listening via `desktop-electron/helpers/wait_for_socket_connections.js`) shows the window, focuses it, clears the input, and dispatches a synthetic `input` event.
 4. If the connection fails, the launcher invokes `gtk-launch navplace` to start Electron, then exits.
 5. Single-instance is enforced via `electron.app.requestSingleInstanceLock()`. A second `npm start` fires the same `second-instance` handler used by the socket path.
 6. `win.on('blur', () => win.hide())` keeps the process resident between summons.
@@ -164,7 +164,7 @@ Inventory (as of this writing):
 - Presentation-style (themed, content-first): `showcase` ★, `basic-for-portfolio`, `basic-for-portfolio2`, `basic-for-kids`, `basic-for-kids2`, `basic-for-recipes`.
 - Experimental / drafts: `_plain-pro1-deepseek-huge-tiles`, `_plain-pro1-grok-big-tiles`, `_plain-pro2-deepseek`, `_plain-recipe-deepseek` (LLM-generated drafts; not polished).
 
-`showcase` is used by https://vbarbarosh.com (a single embed tag, no build step). `github` is the default fallback in `electron/main.js` when `% design:` is missing or unknown.
+`showcase` is used by https://vbarbarosh.com (a single embed tag, no build step). `github` is the default fallback in `desktop-electron/main.js` when `% design:` is missing or unknown.
 
 ## Repository layout
 
@@ -175,7 +175,7 @@ lib/                   shared frontend code (parser, filter, runtime, embed)
   filter1_from_spec.js filter compiler (^ $ ! /)
   navplace.js          input → filter → navigate runtime
   embed.js             third-party embed script
-electron/              desktop app
+desktop-electron/              desktop app
   main.js              window, IPC, protocols, socket server
   launcher.js          tiny hotkey-side socket pinger
   renderer.js          contextBridge preload
@@ -195,7 +195,7 @@ bin/                   shell scripts (configure-gnome, build, watch, migrate, te
 ubuntu/                .desktop file and icon for GNOME install
 knexfile.js
 docker-compose.yaml    local MySQL
-package.json           name: "navplace", main: "electron/main.js"
+package.json           name: "navplace", main: "desktop-electron/main.js"
 ```
 
 ## Commands
@@ -368,7 +368,7 @@ Yes. One `<script src="…/embed.js" data-links="…">` tag in any HTML page. Th
 It depends on the surface. The desktop app reads a single file from disk: `~/.navplace/README.md`. The web app stores collections server-side (MySQL via Knex). The embed widget keeps links inline in the host page's HTML. A cross-surface sync layer is in active development.
 
 **Q: Is there a global hotkey for the desktop app?**
-On GNOME/Linux, **Ctrl+Shift+Alt+N** is wired up by running `bin/configure-gnome` once. The hotkey runs `electron/launcher.js`, a tiny Node script that pings a Unix socket — summoning the app after first launch is essentially instant. Other desktop environments aren't wired up yet.
+On GNOME/Linux, **Ctrl+Shift+Alt+N** is wired up by running `bin/configure-gnome` once. The hotkey runs `desktop-electron/launcher.js`, a tiny Node script that pings a Unix socket — summoning the app after first launch is essentially instant. Other desktop environments aren't wired up yet.
 
 **Q: How do I open multiple links at once?**
 Separate what you type with spaces. `gh mail cal` opens three links — the top match for each. (Inside a single expression, `/`, `^`, `$`, and `!` are also available for tighter filtering; treat these as advanced and don't lead with them in introductory copy.)

@@ -42,7 +42,7 @@ The app is designed to open instantly. It doesn't cold-start on every keypress; 
 
 How it works:
 
-1. `bin/configure-gnome` binds **Ctrl+Shift+Alt+N** to `electron/launcher.js` via `dconf`, and installs `navplace.desktop` for the system.
+1. `bin/configure-gnome` binds **Ctrl+Shift+Alt+N** to `desktop-electron/launcher.js` via `dconf`, and installs `navplace.desktop` for the system.
 2. `launcher.js` is a tiny Node script (no Electron boot) that tries to connect to a Unix socket at `~/.config/navplace/navplace.sock`.
 3. If the socket is alive, the running Electron instance receives the ping and immediately shows, focuses, and clears its input.
 4. If the socket isn't there, `gtk-launch navplace` starts Electron once; every summon after that is just a socket ping, not a process start.
@@ -163,7 +163,7 @@ It depends on the surface:
 A cross-surface sync layer is in active development. Until it lands, collections move with the file, the URL, or the embed tag.
 
 **Is there a global hotkey for the desktop app?**
-On GNOME/Linux, **Ctrl+Shift+Alt+N** is wired up by running `bin/configure-gnome` once. It registers the keybinding via `dconf` and installs `navplace.desktop`. The hotkey runs `electron/launcher.js` — a tiny Node script that pings a Unix socket at `~/.config/navplace/navplace.sock`, so summoning the app is essentially instant after the first launch. Other desktop environments aren't wired up yet; the underlying mechanism (socket + hide-on-blur) is portable, the keybinding glue isn't.
+On GNOME/Linux, **Ctrl+Shift+Alt+N** is wired up by running `bin/configure-gnome` once. It registers the keybinding via `dconf` and installs `navplace.desktop`. The hotkey runs `desktop-electron/launcher.js` — a tiny Node script that pings a Unix socket at `~/.config/navplace/navplace.sock`, so summoning the app is essentially instant after the first launch. Other desktop environments aren't wired up yet; the underlying mechanism (socket + hide-on-blur) is portable, the keybinding glue isn't.
 
 **How do I open multiple links at once?**
 Separate what you type with spaces. `gh mail cal` opens three links — the top match for each. (For tighter filters, NavPlace also supports `/`, `^`, `$`, and `!` inside a single expression, but most users never need them.)
@@ -177,7 +177,7 @@ Yes — MIT licensed, on GitHub.
 - **`lib/filter1_from_spec.js`** — the filter compiler (`^`, `$`, `!`, `/`).
 - **`lib/navplace.js`** — runtime that wires the input box to the filter, manages selection, and dispatches `navigate`.
 - **`lib/embed.js`** — third-party embed; loads the chosen design in an iframe and forwards `data-links` via `postMessage`.
-- **`electron/`** — `main.js` (window, socket server, single-instance lock, favicon cache, `private://` and `app://` protocol handlers), `launcher.js` (the fast Unix-socket ping), `renderer.js` (preload bridge).
+- **`desktop-electron/`** — `main.js` (window, socket server, single-instance lock, favicon cache, `private://` and `app://` protocol handlers), `launcher.js` (the fast Unix-socket ping), `renderer.js` (preload bridge).
 - **`src/http/`** — Express server: landing pages, collection API, dashboard, static `/lib` and `/designs`.
 - **`designs/`** — each design is a self-contained HTML folder that consumes the parsed items.
 
