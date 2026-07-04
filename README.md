@@ -12,18 +12,17 @@ Secondary goal:
 
 ## Desktop AppImage
 
-Use the latest release AppImage for normal desktop use:
+Grab the AppImage that fits your use:
 
-- https://github.com/NavPlace/navplace/releases/latest
+| Build                       | Built on            | Download                                                                                                                    |
+|-----------------------------|---------------------|-----------------------------------------------------------------------------------------------------------------------------|
+| Stable release              | tagged releases     | [releases/latest](https://github.com/NavPlace/navplace/releases/latest)                                                     |
+| Electron — source of truth  | every `master` push | [appimage-electron.yml](https://github.com/NavPlace/navplace/actions/workflows/appimage-electron.yml?query=branch%3Amaster) |
+| Deno — experimental AI port | every `master` push | [appimage-deno.yml](https://github.com/NavPlace/navplace/actions/workflows/appimage-deno.yml?query=branch%3Amaster)         |
 
-Master branch AppImages are built on every push to `master` and are useful for
-testing the newest committed changes:
-
-- https://github.com/NavPlace/navplace/actions/workflows/electron-appimage.yml?query=branch%3Amaster
-
-Open the latest successful `master` run and download the artifact named like
-`NavPlace-master-20260704_223730-abc1234-AppImage`, then make the AppImage
-executable:
+For a `master` build, open the latest successful run and download its artifact
+(named like `NavPlace-Electron-master-20260704_223730-abc1234-AppImage`, or
+`NavPlace-Deno-...` for the Deno port), then make it executable:
 
 ```bash
 chmod +x NavPlace-*.AppImage
