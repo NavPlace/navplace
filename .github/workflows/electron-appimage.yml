@@ -2,8 +2,11 @@ name: Electron AppImage
 
 on:
   push:
+    branches:
+      - master
     tags:
       - 'electron-v*'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -19,45 +22,91 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check production ancestry
-        id: production
+      - name: Plan build
+        id: plan
         shell: bash
         run: |
           set -euo pipefail
 
-          tag_commit=$(git rev-list -n 1 "$GITHUB_REF_NAME")
-          git fetch --no-tags origin production:refs/remotes/origin/production
+          case "$GITHUB_REF" in
+            refs/heads/master)
+              short_sha=${GITHUB_SHA::7}
+              timestamp=$(date -u +%Y%m%d_%H%M%S)
+              master_version="master-${timestamp}-${short_sha}"
 
-          if git merge-base --is-ancestor "$tag_commit" origin/production; then
-            echo "build=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "build=false" >> "$GITHUB_OUTPUT"
-            echo "::notice::Skipping AppImage build because $GITHUB_REF_NAME is not on origin/production."
-          fi
+              echo "build=true" >> "$GITHUB_OUTPUT"
+              echo "release=false" >> "$GITHUB_OUTPUT"
+              echo "master_version=$master_version" >> "$GITHUB_OUTPUT"
+              echo "artifact_name=NavPlace-${master_version}-AppImage" >> "$GITHUB_OUTPUT"
+              ;;
+
+            refs/tags/electron-v*)
+              tag_commit=$(git rev-list -n 1 "$GITHUB_REF_NAME")
+              git fetch --no-tags origin production:refs/remotes/origin/production
+
+              if git merge-base --is-ancestor "$tag_commit" origin/production; then
+                echo "build=true" >> "$GITHUB_OUTPUT"
+                echo "release=true" >> "$GITHUB_OUTPUT"
+              else
+                echo "build=false" >> "$GITHUB_OUTPUT"
+                echo "release=false" >> "$GITHUB_OUTPUT"
+                echo "::notice::Skipping AppImage build because $GITHUB_REF_NAME is not on origin/production."
+              fi
+              ;;
+
+            *)
+              echo "build=false" >> "$GITHUB_OUTPUT"
+              echo "release=false" >> "$GITHUB_OUTPUT"
+              ;;
+          esac
 
       - name: Setup Node
-        if: steps.production.outputs.build == 'true'
+        if: steps.plan.outputs.build == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: src/electron/package-lock.json
+          cache-dependency-path: src/desktop-electron/package-lock.json
 
       - name: Install dependencies
-        if: steps.production.outputs.build == 'true'
-        working-directory: src/electron
+        if: steps.plan.outputs.build == 'true'
+        working-directory: src/desktop-electron
         run: npm ci
 
       - name: Prepare bundled static directory
-        if: steps.production.outputs.build == 'true'
-        run: mkdir -p src/electron/static/unpkg
+        if: steps.plan.outputs.build == 'true'
+        run: mkdir -p src/desktop-electron/static/unpkg
 
       - name: Build AppImage
-        if: steps.production.outputs.build == 'true'
-        run: src/electron/bin/build
+        if: steps.plan.outputs.build == 'true'
+        run: src/desktop-electron/bin/build
+
+      - name: Name master AppImage
+        if: steps.plan.outputs.build == 'true' && steps.plan.outputs.release != 'true'
+        id: master_appimage
+        shell: bash
+        env:
+          MASTER_VERSION: ${{ steps.plan.outputs.master_version }}
+        run: |
+          set -euo pipefail
+
+          appimage=$(find src/desktop-electron/build -maxdepth 1 -type f -name '*.AppImage' -print -quit)
+          renamed="src/desktop-electron/build/NavPlace-${MASTER_VERSION}.AppImage"
+
+          cp -p "$appimage" "$renamed"
+          echo "path=$renamed" >> "$GITHUB_OUTPUT"
+
+      - name: Upload master AppImage artifact
+        if: steps.plan.outputs.build == 'true' && steps.plan.outputs.release != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.plan.outputs.artifact_name }}
+          path: ${{ steps.master_appimage.outputs.path }}
+          if-no-files-found: error
+          retention-days: 30
 
       - name: Upload AppImage to release
-        if: steps.production.outputs.build == 'true'
+        if: steps.plan.outputs.release == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -69,4 +118,4 @@ jobs:
               --notes "release $GITHUB_REF_NAME"
           fi
 
-          gh release upload "$GITHUB_REF_NAME" src/electron/build/*.AppImage --clobber
+          gh release upload "$GITHUB_REF_NAME" src/desktop-electron/build/*.AppImage --clobber

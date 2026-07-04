@@ -8,6 +8,26 @@ Primary goal:
 Secondary goal:
 - Render the same behavior as widgets and web pages from the same file.
 
+## Desktop AppImage
+
+Use the latest release AppImage for normal desktop use:
+
+- https://github.com/NavPlace/navplace/releases/latest
+
+Master branch AppImages are built on every push to `master` and are useful for
+testing the newest committed changes:
+
+- https://github.com/NavPlace/navplace/actions/workflows/electron-appimage.yml?query=branch%3Amaster
+
+Open the latest successful `master` run and download the artifact named like
+`NavPlace-master-20260704_223730-abc1234-AppImage`. GitHub downloads artifacts
+as `.zip` files; unzip it, then make the AppImage executable:
+
+```bash
+chmod +x NavPlace-*.AppImage
+./NavPlace-*.AppImage
+```
+
 ## Desktop settings
 
 The Electron app uses `~/.navplace/settings.yaml` for user settings and secrets.
