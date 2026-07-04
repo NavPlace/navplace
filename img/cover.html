@@ -1,0 +1,156 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>NavPlace — cover</title>
+<style>
+  html, body { margin: 0; background: #0f1115; }
+  svg { display: block; }
+</style>
+<!--
+  Source for img/cover.png (README og:image, 1600x900).
+  Rendered headless with Playwright's Chromium at device-scale 1.
+  Font stack leads with DejaVu Sans so the render box matches the committed PNG.
+-->
+<svg width="1600" height="900" viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg"
+     font-family="'DejaVu Sans', system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, sans-serif">
+  <defs>
+    <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8a6dff"/>
+      <stop offset="1" stop-color="#5b2fd6"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.78" cy="0.16" r="0.7">
+      <stop offset="0" stop-color="#8a6dff" stop-opacity="0.20"/>
+      <stop offset="1" stop-color="#8a6dff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="0.08" cy="0.95" r="0.6">
+      <stop offset="0" stop-color="#5b2fd6" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#5b2fd6" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="wire" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#8a6dff" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#8a6dff" stop-opacity="0.75"/>
+    </linearGradient>
+  </defs>
+
+  <!-- backdrop -->
+  <rect width="1600" height="900" fill="#0f1115"/>
+  <rect width="1600" height="900" fill="url(#glow)"/>
+  <rect width="1600" height="900" fill="url(#glow2)"/>
+  <rect x="0.5" y="0.5" width="1599" height="899" fill="none" stroke="#242832"/>
+
+  <!-- brand lockup -->
+  <rect x="100" y="92" width="56" height="56" rx="15" fill="url(#mark)"/>
+  <path transform="translate(100 92) scale(2.3333)" fill="#ffffff" fill-rule="evenodd"
+        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z M12 6.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5z"/>
+  <text x="176" y="131" font-size="30" font-weight="700" fill="#f4f5f7" letter-spacing="-0.5">NavPlace</text>
+
+  <!-- hero copy -->
+  <text x="100" y="392" font-size="86" font-weight="700" fill="#f4f5f7" letter-spacing="-2">One file.</text>
+  <text x="100" y="490" font-size="86" font-weight="700" fill="#8a6dff" letter-spacing="-2">Many faces.</text>
+
+  <text x="102" y="560" font-size="26" fill="#a7abb3">Organize, navigate, and present your links</text>
+  <text x="102" y="596" font-size="26" fill="#a7abb3">from a single text&#8209;based source.</text>
+
+  <!-- hotkey chip -->
+  <g font-size="18" font-weight="700" fill="#f4f5f7" text-anchor="middle">
+    <rect x="100" y="652" width="66" height="44" rx="10" fill="#191f2d" stroke="#242832"/>
+    <text x="133" y="680">Ctrl</text>
+    <text x="182" y="681" font-weight="400" fill="#a7abb3">+</text>
+    <rect x="198" y="652" width="78" height="44" rx="10" fill="#191f2d" stroke="#242832"/>
+    <text x="237" y="680">Shift</text>
+    <text x="292" y="681" font-weight="400" fill="#a7abb3">+</text>
+    <rect x="308" y="652" width="60" height="44" rx="10" fill="#191f2d" stroke="#242832"/>
+    <text x="338" y="680">Alt</text>
+    <text x="384" y="681" font-weight="400" fill="#a7abb3">+</text>
+    <rect x="400" y="652" width="48" height="44" rx="10" fill="#191f2d" stroke="#242832"/>
+    <text x="424" y="680">N</text>
+    <text x="474" y="681" font-size="19" font-weight="400" fill="#a7abb3" text-anchor="start">Summon from anywhere</text>
+  </g>
+
+  <!-- footer -->
+  <text x="100" y="828" font-size="18" fill="#6b7180">github.com/NavPlace/navplace</text>
+
+  <!-- ===== diagram: one file -> many faces ===== -->
+
+  <!-- connectors (behind cards) -->
+  <g fill="none" stroke="url(#wire)" stroke-width="2.5">
+    <path d="M1132 480 C 1212 480 1176 250 1256 250"/>
+    <path d="M1132 480 C 1200 480 1188 452 1256 452"/>
+    <path d="M1132 480 C 1212 480 1176 654 1256 654"/>
+  </g>
+  <g fill="#8a6dff">
+    <circle cx="1132" cy="480" r="5"/>
+    <circle cx="1256" cy="250" r="4"/>
+    <circle cx="1256" cy="452" r="4"/>
+    <circle cx="1256" cy="654" r="4"/>
+  </g>
+
+  <!-- the one file -->
+  <rect x="884" y="332" width="248" height="296" rx="18" fill="#141824" stroke="#242832"/>
+  <circle cx="912" cy="362" r="5" fill="#2f3542"/>
+  <circle cx="930" cy="362" r="5" fill="#2f3542"/>
+  <circle cx="948" cy="362" r="5" fill="#2f3542"/>
+  <text x="1108" y="367" font-size="14" fill="#6b7180" text-anchor="end">README.md</text>
+  <line x1="908" y1="386" x2="1108" y2="386" stroke="#242832"/>
+  <g>
+    <circle cx="914" cy="418" r="5" fill="#8a6dff"/>
+    <rect x="928" y="412" width="176" height="11" rx="5.5" fill="#2a3040"/>
+    <circle cx="914" cy="458" r="5" fill="#5b8dff"/>
+    <rect x="928" y="452" width="150" height="11" rx="5.5" fill="#2a3040"/>
+    <circle cx="914" cy="498" r="5" fill="#5fd0a3"/>
+    <rect x="928" y="492" width="168" height="11" rx="5.5" fill="#2a3040"/>
+    <circle cx="914" cy="538" r="5" fill="#f0a44a"/>
+    <rect x="928" y="532" width="132" height="11" rx="5.5" fill="#2a3040"/>
+    <circle cx="914" cy="578" r="5" fill="#8a6dff"/>
+    <rect x="928" y="572" width="158" height="11" rx="5.5" fill="#2a3040"/>
+  </g>
+  <text x="1008" y="662" font-size="16" fill="#a7abb3" text-anchor="middle">one file</text>
+
+  <!-- face A: launcher grid -->
+  <rect x="1256" y="175" width="232" height="150" rx="16" fill="#141824" stroke="#242832"/>
+  <g>
+    <rect x="1274" y="203" width="54" height="44" rx="9" fill="#191f2d" stroke="#242832"/>
+    <circle cx="1287" cy="216" r="3.5" fill="#8a6dff"/>
+    <rect x="1345" y="203" width="54" height="44" rx="9" fill="#191f2d" stroke="#242832"/>
+    <circle cx="1358" cy="216" r="3.5" fill="#5b8dff"/>
+    <rect x="1416" y="203" width="54" height="44" rx="9" fill="#191f2d" stroke="#242832"/>
+    <circle cx="1429" cy="216" r="3.5" fill="#5fd0a3"/>
+    <rect x="1274" y="257" width="54" height="44" rx="9" fill="#191f2d" stroke="#242832"/>
+    <circle cx="1287" cy="270" r="3.5" fill="#f0a44a"/>
+    <rect x="1345" y="257" width="54" height="44" rx="9" fill="#191f2d" stroke="#242832"/>
+    <circle cx="1358" cy="270" r="3.5" fill="#8a6dff"/>
+    <rect x="1416" y="257" width="54" height="44" rx="9" fill="#191f2d" stroke="#242832"/>
+    <circle cx="1429" cy="270" r="3.5" fill="#5b8dff"/>
+  </g>
+  <text x="1372" y="349" font-size="14" fill="#6b7180" text-anchor="middle">launcher</text>
+
+  <!-- face B: web page -->
+  <rect x="1256" y="377" width="232" height="150" rx="16" fill="#141824" stroke="#242832"/>
+  <rect x="1274" y="397" width="196" height="30" rx="8" fill="#191f2d" stroke="#242832"/>
+  <circle cx="1290" cy="412" r="5" fill="none" stroke="#6b7180" stroke-width="2"/>
+  <line x1="1293.5" y1="415.5" x2="1297" y2="419" stroke="#6b7180" stroke-width="2"/>
+  <rect x="1306" y="408" width="96" height="8" rx="4" fill="#2a3040"/>
+  <g>
+    <circle cx="1281" cy="448" r="4" fill="#8a6dff"/>
+    <rect x="1293" y="444" width="164" height="8" rx="4" fill="#2a3040"/>
+    <circle cx="1281" cy="474" r="4" fill="#5b8dff"/>
+    <rect x="1293" y="470" width="138" height="8" rx="4" fill="#2a3040"/>
+    <circle cx="1281" cy="500" r="4" fill="#5fd0a3"/>
+    <rect x="1293" y="496" width="152" height="8" rx="4" fill="#2a3040"/>
+  </g>
+  <text x="1372" y="551" font-size="14" fill="#6b7180" text-anchor="middle">web page</text>
+
+  <!-- face C: widget -->
+  <rect x="1256" y="579" width="232" height="150" rx="16" fill="#141824" stroke="#242832"/>
+  <g>
+    <rect x="1274" y="597" width="196" height="26" rx="13" fill="#191f2d" stroke="#242832"/>
+    <circle cx="1290" cy="610" r="4" fill="#8a6dff"/>
+    <rect x="1302" y="606" width="120" height="8" rx="4" fill="#2a3040"/>
+    <rect x="1274" y="631" width="196" height="26" rx="13" fill="#191f2d" stroke="#242832"/>
+    <circle cx="1290" cy="644" r="4" fill="#5b8dff"/>
+    <rect x="1302" y="640" width="96" height="8" rx="4" fill="#2a3040"/>
+    <rect x="1274" y="665" width="196" height="26" rx="13" fill="#191f2d" stroke="#242832"/>
+    <circle cx="1290" cy="678" r="4" fill="#f0a44a"/>
+    <rect x="1302" y="674" width="132" height="8" rx="4" fill="#2a3040"/>
+  </g>
+  <text x="1372" y="753" font-size="14" fill="#6b7180" text-anchor="middle">widget</text>
+</svg>

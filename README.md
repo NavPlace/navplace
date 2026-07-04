@@ -1,3 +1,5 @@
+![NavPlace — one file, many faces](img/cover.png)
+
 Pick a design, paste your links, you're done!
 
 NavPlace is a tool for organizing, navigating, and presenting your links from a single text-based source.
