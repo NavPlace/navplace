@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640">
+  <defs>
+    <radialGradient id="glowTeal" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#2DD4BF" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#2DD4BF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowViolet" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#8B5CF6" stop-opacity="0.13"/>
+      <stop offset="1" stop-color="#8B5CF6" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="iconGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2DD4BF"/>
+      <stop offset="1" stop-color="#0EA5E9"/>
+    </linearGradient>
+  </defs>
+
+  <!-- background -->
+  <rect width="1280" height="640" fill="#0B1020"/>
+  <ellipse cx="220" cy="80" rx="520" ry="380" fill="url(#glowTeal)"/>
+  <ellipse cx="1080" cy="560" rx="560" ry="400" fill="url(#glowViolet)"/>
+
+  <!-- app icon: map pin -->
+  <rect x="64" y="56" width="56" height="56" rx="14" fill="url(#iconGrad)"/>
+  <path d="M92 68 c-9.4 0 -17 7.4 -17 16.5 c0 12 17 21.5 17 21.5 s17 -9.5 17 -21.5 c0 -9.1 -7.6 -16.5 -17 -16.5 z" fill="#0B1020"/>
+  <circle cx="92" cy="84" r="6" fill="#E6FFFA"/>
+
+  <!-- title -->
+  <text x="136" y="103" font-family="DejaVu Sans" font-size="52" font-weight="bold" fill="#F1F5FF">NavPlace</text>
+  <text x="64" y="172" font-family="DejaVu Sans" font-size="27" font-weight="bold" fill="#2DD4BF">One file, many faces.</text>
+  <text x="64" y="202" font-family="DejaVu Sans" font-size="17" fill="#94A3C4">A hotkey launcher, a web page, an embed widget —</text>
+  <text x="64" y="228" font-family="DejaVu Sans" font-size="17" fill="#94A3C4">all driven by one plain-text file.</text>
+
+  <!-- file card -->
+  <rect x="64" y="250" width="310" height="320" rx="12" fill="#10172B" stroke="#2A3352"/>
+  <path d="M64 262 a12 12 0 0 1 12 -12 h286 a12 12 0 0 1 12 12 v24 h-310 z" fill="#161E36"/>
+  <circle cx="86" cy="268" r="5" fill="#F87171"/>
+  <circle cx="104" cy="268" r="5" fill="#FBBF24"/>
+  <circle cx="122" cy="268" r="5" fill="#34D399"/>
+  <text x="219" y="273" font-family="DejaVu Sans Mono" font-size="13" fill="#8B96B5" text-anchor="middle">~/.navplace/README.md</text>
+
+  <g font-family="DejaVu Sans Mono" font-size="14">
+    <text x="84" y="312" fill="#8B5CF6">% design: <tspan fill="#2DD4BF">basic</tspan></text>
+    <text x="84" y="354" fill="#F59E0B"># Work</text>
+    <text x="84" y="380" fill="#E2E8F5">Mail<tspan x="200" fill="#55648F">mail.google.com</tspan></text>
+    <text x="84" y="406" fill="#E2E8F5">CI <tspan fill="#2DD4BF">#devops</tspan><tspan x="200" fill="#55648F">ci.company.dev</tspan></text>
+    <text x="84" y="432" fill="#E2E8F5">Docs<tspan x="200" fill="#55648F">docs.internal</tspan></text>
+    <text x="84" y="474" fill="#F59E0B"># Home</text>
+    <text x="84" y="500" fill="#E2E8F5">Recipes<tspan x="200" fill="#55648F">my.recipes</tspan></text>
+    <text x="84" y="526" fill="#E2E8F5">Kids <tspan fill="#2DD4BF">#fun</tspan><tspan x="200" fill="#55648F">kids.videos</tspan></text>
+  </g>
+
+  <!-- connectors -->
+  <g fill="none" stroke-width="2">
+    <path d="M374 290 C 520 100, 800 60, 1040 155" stroke="#8B5CF6" stroke-opacity="0.6"/>
+    <path d="M374 500 C 550 580, 800 590, 1040 495" stroke="#F59E0B" stroke-opacity="0.6"/>
+  </g>
+  <path d="M374 350 C 440 350, 450 320, 520 320" fill="none" stroke="#2DD4BF" stroke-width="3" stroke-opacity="0.8"/>
+  <g>
+    <circle cx="374" cy="290" r="4" fill="#8B5CF6"/>
+    <circle cx="374" cy="350" r="5" fill="#2DD4BF"/>
+    <circle cx="374" cy="500" r="4" fill="#F59E0B"/>
+    <circle cx="520" cy="320" r="5" fill="#2DD4BF"/>
+    <circle cx="1040" cy="155" r="4" fill="#8B5CF6"/>
+    <circle cx="1040" cy="495" r="4" fill="#F59E0B"/>
+  </g>
+
+  <!-- hero: desktop app -->
+  <rect x="520" y="140" width="480" height="360" rx="14" fill="#121A30" stroke="#2DD4BF" stroke-opacity="0.5" stroke-width="1.5"/>
+  <path d="M520 154 a14 14 0 0 1 14 -14 h452 a14 14 0 0 1 14 14 v22 h-480 z" fill="#161E36"/>
+  <circle cx="544" cy="158" r="5" fill="#F87171"/>
+  <circle cx="562" cy="158" r="5" fill="#FBBF24"/>
+  <circle cx="580" cy="158" r="5" fill="#34D399"/>
+  <!-- global hotkey keycaps in chrome -->
+  <g font-family="DejaVu Sans Mono" font-size="11" fill="#94A3C4" text-anchor="middle">
+    <rect x="806" y="147" width="40" height="22" rx="5" fill="#0B1020" stroke="#3A4568"/>
+    <text x="826" y="162">Ctrl</text>
+    <rect x="852" y="147" width="46" height="22" rx="5" fill="#0B1020" stroke="#3A4568"/>
+    <text x="875" y="162">Shift</text>
+    <rect x="904" y="147" width="34" height="22" rx="5" fill="#0B1020" stroke="#3A4568"/>
+    <text x="921" y="162">Alt</text>
+    <rect x="944" y="147" width="24" height="22" rx="5" fill="#0B1020" stroke="#3A4568"/>
+    <text x="956" y="162">N</text>
+  </g>
+
+  <text x="540" y="200" font-family="DejaVu Sans Mono" font-size="12" fill="#2DD4BF">desktop app</text>
+
+  <!-- search input -->
+  <rect x="540" y="210" width="440" height="42" rx="9" fill="#0B1020" stroke="#2DD4BF" stroke-opacity="0.55"/>
+  <circle cx="564" cy="231" r="7" fill="none" stroke="#94A3C4" stroke-width="2"/>
+  <line x1="569" y1="236" x2="575" y2="242" stroke="#94A3C4" stroke-width="2" stroke-linecap="round"/>
+  <text x="590" y="238" font-family="DejaVu Sans Mono" font-size="18" fill="#F1F5FF">gi</text>
+  <rect x="614" y="219" width="9" height="24" fill="#2DD4BF"/>
+
+  <!-- results -->
+  <rect x="540" y="270" width="440" height="34" rx="7" fill="#2DD4BF" fill-opacity="0.12"/>
+  <rect x="540" y="270" width="3" height="34" fill="#2DD4BF"/>
+  <text x="556" y="292" font-family="DejaVu Sans Mono" font-size="15"><tspan fill="#2DD4BF" font-weight="bold">Gi</tspan><tspan fill="#F1F5FF">tHub</tspan></text>
+  <text x="900" y="292" font-family="DejaVu Sans Mono" font-size="13" fill="#55648F" text-anchor="end">github.com/me</text>
+  <rect x="926" y="275" width="36" height="24" rx="5" fill="#161E36" stroke="#2DD4BF" stroke-opacity="0.6"/>
+  <text x="944" y="292" font-family="DejaVu Sans" font-size="14" fill="#2DD4BF" text-anchor="middle">&#8629;</text>
+
+  <text x="556" y="332" font-family="DejaVu Sans Mono" font-size="15"><tspan fill="#2DD4BF">Gi</tspan><tspan fill="#94A3C4">tlab</tspan></text>
+  <text x="900" y="332" font-family="DejaVu Sans Mono" font-size="13" fill="#3A4568" text-anchor="end">gitlab.company.dev</text>
+
+  <text x="556" y="372" font-family="DejaVu Sans Mono" font-size="15"><tspan fill="#2DD4BF">Gi</tspan><tspan fill="#94A3C4">t docs</tspan></text>
+  <text x="900" y="372" font-family="DejaVu Sans Mono" font-size="13" fill="#3A4568" text-anchor="end">git-scm.com/docs</text>
+
+  <text x="760" y="462" font-family="DejaVu Sans" font-size="14" fill="#55648F" text-anchor="middle">summon &#183; type a few letters &#183; Enter &#8212; and you're there</text>
+
+  <!-- face: page -->
+  <rect x="1040" y="80" width="176" height="150" rx="12" fill="#121A30" stroke="#8B5CF6" stroke-opacity="0.45"/>
+  <text x="1056" y="108" font-family="DejaVu Sans Mono" font-size="12" fill="#8B5CF6">page</text>
+  <rect x="1056" y="120" width="70" height="9" rx="4.5" fill="#F59E0B" fill-opacity="0.75"/>
+  <g fill="#3A4568">
+    <circle cx="1061" cy="148" r="3.5" fill="#8B5CF6"/><rect x="1073" y="144" width="100" height="8" rx="4"/>
+    <circle cx="1061" cy="172" r="3.5" fill="#8B5CF6"/><rect x="1073" y="168" width="78" height="8" rx="4"/>
+    <circle cx="1061" cy="196" r="3.5" fill="#8B5CF6"/><rect x="1073" y="192" width="112" height="8" rx="4"/>
+  </g>
+
+  <!-- face: widget -->
+  <rect x="1040" y="420" width="176" height="150" rx="12" fill="#121A30" stroke="#F59E0B" stroke-opacity="0.45"/>
+  <text x="1056" y="448" font-family="DejaVu Sans Mono" font-size="12" fill="#F59E0B">widget</text>
+  <rect x="1056" y="460" width="144" height="26" rx="6" fill="#0B1020" stroke="#F59E0B" stroke-opacity="0.5"/>
+  <circle cx="1071" cy="473" r="5" fill="none" stroke="#94A3C4" stroke-width="1.8"/>
+  <line x1="1074.5" y1="476.5" x2="1079" y2="481" stroke="#94A3C4" stroke-width="1.8" stroke-linecap="round"/>
+  <rect x="1088" y="469" width="56" height="8" rx="4" fill="#3A4568"/>
+  <g fill="#3A4568">
+    <circle cx="1061" cy="508" r="3.5" fill="#F59E0B"/><rect x="1073" y="504" width="100" height="8" rx="4"/>
+    <circle cx="1061" cy="532" r="3.5" fill="#F59E0B"/><rect x="1073" y="528" width="80" height="8" rx="4"/>
+  </g>
+
+  <!-- footer -->
+  <text x="1216" y="618" font-family="DejaVu Sans Mono" font-size="12" fill="#55608A" text-anchor="end">github.com/NavPlace/navplace</text>
+</svg>
