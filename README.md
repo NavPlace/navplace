@@ -68,6 +68,16 @@ it falls back to `gtk-launch navplace`, which starts the AppImage.
 `/usr/bin/env node` shebang. On success, the command prints the launcher path,
 the AppImage path used for cold start, and the resolved node executable.
 
+### Chrome links on Wayland
+
+On GNOME Wayland, Chrome can open external links in a window on another
+workspace. Install the optional [Window Calls](https://extensions.gnome.org/extension/4724/window-calls/)
+extension to let NavPlace focus a Chrome window on the current workspace first.
+This behavior only applies when an official Google Chrome Linux package handles
+the link's HTTP or HTTPS scheme. See
+[Chrome window selection on Wayland](docs/wayland-chrome-window.md) for details
+and a manual test.
+
 ## Similar
 
 - https://multy.me/

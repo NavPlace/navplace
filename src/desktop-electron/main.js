@@ -4,6 +4,7 @@ const cli = require('@vbarbarosh/node-helpers/src/cli');
 const config = require('./config');
 const configure_gnome = require('./helpers/configure_gnome');
 const electron = require('electron');
+const focus_chrome_window = require('./helpers/focus_chrome_window');
 const format_date = require('@vbarbarosh/node-helpers/src/format_date');
 const fs = require('fs');
 const fs_exists = require('@vbarbarosh/node-helpers/src/fs_exists');
@@ -188,7 +189,7 @@ async function main()
     });
 
     win.webContents.setWindowOpenHandler(function (event) {
-        electron.shell.openExternal(event.url);
+        open_external(event.url);
         return {action: 'deny'};
     });
 
@@ -222,6 +223,20 @@ async function main()
             console.log('__closed');
         },
     });
+}
+
+async function open_external(url)
+{
+    const scheme = url.startsWith('http://') ? 'http' : url.startsWith('https://') ? 'https' : null;
+    if (process.platform === 'linux' && process.env.XDG_SESSION_TYPE === 'wayland' && scheme) {
+        try {
+            await focus_chrome_window(scheme);
+        }
+        catch {
+            // Handler lookup and Window Calls are optional; fall back to normal URL opening.
+        }
+    }
+    await electron.shell.openExternal(url);
 }
 
 async function load_collection()
