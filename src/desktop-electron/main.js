@@ -92,6 +92,13 @@ async function main()
         },
     });
 
+    // Each design's index.html sets its own <title>, which replaces the
+    // window title on load — append the app version whenever that happens.
+    win.on('page-title-updated', function (event, title) {
+        event.preventDefault();
+        win.setTitle(`${title} — v${electron.app.getVersion()}`);
+    });
+
     electron.app.on('second-instance', async function () {
         console.log('second-instance');
         if (win.isMinimized()) {
