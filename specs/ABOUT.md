@@ -123,7 +123,7 @@ The author's personal site (`vbarbarosh.com`) is, in full, a single HTML page th
 % email: hello@vbarbarosh.com
 
 # GitHub
-navplace                https://github.com/NavPlace/navplace/
+navplace                https://github.com/vbarbarosh/navplace/
 node-helpers            https://vbarbarosh.github.io/node-helpers
 vue-modal               https://vbarbarosh.github.io/vue-modal
 
@@ -183,4 +183,4 @@ Yes — MIT licensed, on GitHub.
 
 ## Status & contributing
 
-NavPlace is open source. Issues and pull requests are welcome at https://github.com/NavPlace/navplace.
+NavPlace is open source. Issues and pull requests are welcome at https://github.com/vbarbarosh/navplace.

@@ -2,7 +2,7 @@
 
 Slogan: "Navigation at your fingertips"
 License: MIT.
-Repo: https://github.com/NavPlace/navplace
+Repo: https://github.com/vbarbarosh/navplace
 Author: Vladimir Barbarosh <hello@navplace.com>
 `package.json` description: "The fastest way to open your links".
 
