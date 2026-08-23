@@ -50,6 +50,8 @@ How it works:
 
 Single-instance is enforced via `electron.app.requestSingleInstanceLock()`; a second `npm start` re-shows the existing window instead of spawning another.
 
+Every summon reloads the links, and the reload never runs in front of the window: it opens on what it already has and redraws when the new links arrive. See [The window never waits](../docs/instant-launch.md).
+
 ## The source format
 
 A small plain-text DSL — no JSON, no YAML, no UI required to author one:

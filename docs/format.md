@@ -66,19 +66,19 @@ Desktop app only. The web app and the embed widget read the directive and do
 nothing with it.
 
 ```
-% include: https://example.com/links.md #work #prefix=ACME/
+% include: https://example.com/links.md #work #prefix=ACME
 ```
 
 The url comes first, then optional decorations for every pulled link:
 
-| Option      | Effect                                   |
-|-------------|------------------------------------------|
-| `#tag`      | Adds a tag. Repeatable.                  |
-| `#prefix=x` | Puts `x` in front of every pulled label. |
-| `#suffix=x` | Puts `x` after every pulled label.       |
+| Option      | Effect                                               |
+|-------------|------------------------------------------------------|
+| `#tag`      | Adds a tag. Repeatable.                              |
+| `#prefix=x` | Puts `x` and a space in front of every pulled label. |
+| `#suffix=x` | Puts a space and `x` after every pulled label.       |
 
-Values hold no spaces — the rule item lines already follow. Unknown options are
-ignored.
+Values hold no spaces — the rule item lines already follow. The separating space
+is added for you. Unknown options are ignored.
 
 Rules:
 
@@ -94,7 +94,9 @@ Rules:
 - The request carries no access token, unlike `collection_url` in
   `~/.navplace/settings.yaml`. An include url is a stranger.
 - A url that fails is logged and skipped, and the rest of the collection still
-  loads. Startup waits up to 5 seconds per url.
+  loads. Each url gets 5 seconds before it is abandoned.
+- No pull ever runs in front of the window. It opens on the local links and
+  redraws when the pulled ones arrive — see [The window never waits](instant-launch.md).
 
 ## `# Section` — sections
 

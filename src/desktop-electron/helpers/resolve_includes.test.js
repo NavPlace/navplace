@@ -19,7 +19,7 @@ test('appends the links and sections of a pulled document', async function () {
     await using server = await serve(REMOTE);
 
     const collection = parse(`% design: github
-% include: ${server.url} #work #prefix=ACME/
+% include: ${server.url} #work #prefix=ACME
 
 Local   https://local.example.com/
 `);
@@ -28,8 +28,8 @@ Local   https://local.example.com/
     assert.equal(actual.meta.design, 'github');
     assert.deepEqual(actual.items.map(v => [v.label, v.href, v.tags, v.namespaces]), [
         ['Local', 'https://local.example.com/', [], []],
-        ['ACME/Jira', 'https://jira.example.com/', ['tracker', 'work'], ['Work']],
-        ['ACME/Netflix', 'https://netflix.example.com/', ['work'], ['Personal']],
+        ['ACME Jira', 'https://jira.example.com/', ['tracker', 'work'], ['Work']],
+        ['ACME Netflix', 'https://netflix.example.com/', ['work'], ['Personal']],
     ]);
 });
 

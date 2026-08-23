@@ -102,49 +102,16 @@ async function main()
 
     electron.app.on('second-instance', async function () {
         console.log('second-instance');
-        if (win.isMinimized()) {
-            win.restore();
-        }
-        if (!win.isVisible()) {
-            win.show();
-        }
-        win.focus();
-        await win.webContents.executeJavaScript(`{
-            const input = document.querySelector('input');
-            if (input) {
-                input.focus();
-                input.value = '';
-                input.dispatchEvent(new Event('input', {bubbles: true}));
-                // input.select();
-            }
-        }`);
+        await show_window();
     });
     await using _ = await wait_for_socket_connections({
         socket: config.socket_file,
         connection: async function () {
             console.log('socket connection');
-            if (win.isMinimized()) {
-                win.restore();
-            }
-            if (!win.isVisible()) {
-                win.show();
-            }
-            win.focus();
-            await win.webContents.executeJavaScript(`{
-                const input = document.querySelector('input');
-                if (input) {
-                    input.focus();
-                    input.value = '';
-                    input.dispatchEvent(new Event('input', {bubbles: true}));
-                    // input.select();
-                }
-            }`);
+            await show_window();
         },
     });
-    await using __ = connect_events(async function () {
-        parsed_collection = await load_collection();
-        win.webContents.send('api_items_changed', parsed_collection);
-    });
+    await using __ = connect_events(refresh_collection);
 
     electron.protocol.handle('private', async function (request) {
         // XXX fs.promises.realpath will throw if file does not exist
@@ -213,6 +180,7 @@ async function main()
     const design = make(parsed_collection.meta.design, {type: 'enum', options: ['github', ...await fs_readdir(config.designs_dir)]});
     await win.loadFile(fs_path_resolve(__dirname, `../../designs/${design}/index.html`));
     win.show();
+    start_refresh();
 
     // await once(win, {
     //     closed: function () {
@@ -231,6 +199,42 @@ async function main()
             console.log('__closed');
         },
     });
+
+    async function refresh_collection()
+    {
+        parsed_collection = await resolve_includes(await load_collection());
+        win.webContents.send('api_items_changed', parsed_collection);
+    }
+
+    // Never awaited by anything that shows the window.
+    function start_refresh()
+    {
+        refresh_collection().catch(error => console.error('[collection_refresh_failed]', error.stack || error.message));
+    }
+
+    async function show_window()
+    {
+        // Links change while the app waits in the background, so every summon
+        // reloads them. The window goes up first; the renderer redraws when the
+        // items arrive.
+        start_refresh();
+        if (win.isMinimized()) {
+            win.restore();
+        }
+        if (!win.isVisible()) {
+            win.show();
+        }
+        win.focus();
+        await win.webContents.executeJavaScript(`{
+            const input = document.querySelector('input');
+            if (input) {
+                input.focus();
+                input.value = '';
+                input.dispatchEvent(new Event('input', {bubbles: true}));
+                // input.select();
+            }
+        }`);
+    }
 }
 
 async function open_external(url)
@@ -247,13 +251,15 @@ async function open_external(url)
     await electron.shell.openExternal(url);
 }
 
+// The local source only. `% include:` urls are pulled by refresh_collection,
+// which never runs in front of the window.
 async function load_collection()
 {
     if (config.collection_url) {
-        return resolve_includes(parse(await fetch_collection_contents()));
+        return parse(await fetch_collection_contents());
     }
     await ensure_default_readme();
-    return resolve_includes(parse(await fs_read_utf8(config.readme_file)));
+    return parse(await fs_read_utf8(config.readme_file));
 }
 
 async function ensure_default_readme()

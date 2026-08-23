@@ -412,7 +412,7 @@
 
         <div class="card">
             <h2>Include — desktop app only</h2>
-<pre class="wrap"><span class="meta">% include:</span> <span class="url">https://example.com/links.md</span> <span class="tag">#work</span> <span class="tag">#prefix=ACME/</span></pre>
+<pre class="wrap"><span class="meta">% include:</span> <span class="url">https://example.com/links.md</span> <span class="tag">#work</span> <span class="tag">#prefix=ACME</span></pre>
             <p>
                 The desktop app pulls the document and appends its links. The web app and the
                 embed widget read the directive and do nothing with it.
@@ -428,11 +428,11 @@
                 </tr>
                 <tr>
                     <td><code class="tag">#prefix=x</code></td>
-                    <td>Puts <code>x</code> in front of every pulled label.</td>
+                    <td>Puts <code>x</code> and a space in front of every pulled label.</td>
                 </tr>
                 <tr>
                     <td><code class="tag">#suffix=x</code></td>
-                    <td>Puts <code>x</code> after every pulled label.</td>
+                    <td>Puts a space and <code>x</code> after every pulled label.</td>
                 </tr>
             </table>
             <ul>
@@ -442,7 +442,8 @@
                 <li>The pull runs first and <code class="meta">% ns:</code> after it: your filter gates pulled links too.</li>
                 <li>The prefix and the suffix reach the search text: typing the prefix finds the pulled links.</li>
                 <li>The request carries no access token. An include url is a stranger.</li>
-                <li>A url that fails is logged and skipped. Startup waits up to 5 seconds per url.</li>
+                <li>A url that fails is logged and skipped. Each url gets 5 seconds before it is abandoned.</li>
+                <li>No pull runs in front of the window: it opens on the local links and redraws when the pulled ones arrive.</li>
             </ul>
         </div>
 
