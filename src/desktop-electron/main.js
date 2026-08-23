@@ -19,6 +19,7 @@ const http_get_buffer = require('@vbarbarosh/node-helpers/src/http_get_buffer');
 const http_get_json = require('@vbarbarosh/node-helpers/src/http_get_json');
 const make = require('@vbarbarosh/type-helpers');
 const parse = require('../../lib/parse');
+const resolve_includes = require('./helpers/resolve_includes');
 const sanitize_filename = require('@vbarbarosh/node-helpers/src/sanitize_filename');
 const urlmod = require('@vbarbarosh/node-helpers/src/urlmod');
 const wait_for_socket_connections = require('./helpers/wait_for_socket_connections');
@@ -249,10 +250,10 @@ async function open_external(url)
 async function load_collection()
 {
     if (config.collection_url) {
-        return parse(await fetch_collection_contents());
+        return resolve_includes(parse(await fetch_collection_contents()));
     }
     await ensure_default_readme();
-    return parse(await fs_read_utf8(config.readme_file));
+    return resolve_includes(parse(await fs_read_utf8(config.readme_file)));
 }
 
 async function ensure_default_readme()
